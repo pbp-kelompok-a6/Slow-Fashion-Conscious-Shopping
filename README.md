@@ -56,6 +56,20 @@ CRUD penuh atas listing baju milik penjual, dengan filter berbasis autentikasi (
 
 Eksplorasi produk secara publik ditambah pengelolaan wishlist pribadi.
 
+- **Halaman 
+
+**Katalog Produk**
+Halaman untuk menampilkan seluruh produk thrift yang tersedia. Pengguna dapat mencari dan memfilter produk berdasarkan kategori, brand, ukuran, kondisi, dan harga. Setiap produk ditampilkan dalam bentuk card yang berisi foto, nama, brand, ukuran, kondisi, dan harga.
+
+**Detail Produk**
+Halaman yang menampilkan informasi lengkap dari produk yang dipilih, seperti foto, nama, brand, ukuran, kondisi, harga, dan deskripsi. Halaman ini juga menampilkan size chart berdasarkan brand dari mock API serta menyediakan tombol untuk menambahkan produk ke keranjang.
+
+**Keranjang**
+Halaman untuk melihat produk yang akan dibeli. Pengguna dapat melihat detail produk, mengubah jumlah barang, menghapus produk, dan melihat total harga sebelum melanjutkan ke pembayaran.
+
+**Alur Pembayaran**
+Halaman untuk menyelesaikan pembelian. Pengguna mengonfirmasi produk dan total pembayaran, memilih metode pembayaran yang tersedia, lalu melakukan konfirmasi pembayaran. Setelah berhasil, sistem menampilkan halaman konfirmasi bahwa pesanan telah berhasil dibuat.
+
 - **Create**: pengguna yang sudah login dapat menyimpan baju ke wishlist dengan menekan tombol "Simpan", opsional menambahkan catatan/prioritas pribadi.
 - **Read**: menjelajah seluruh baju thrift secara publik (tanpa perlu login), melakukan pencarian/filter berdasarkan kategori, brand, ukuran, kondisi, dan harga, serta membuka halaman detail tiap baju. Pengguna yang login juga bisa melihat wishlist miliknya sendiri.
 - **Update**: mengubah catatan/prioritas pada produk yang tersimpan di wishlist (opsional).
