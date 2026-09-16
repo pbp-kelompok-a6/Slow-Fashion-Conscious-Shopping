@@ -12,12 +12,13 @@ Aplikasi ini menjembatani kedua kebutuhan tersebut: memberi wadah bagi penjual u
 
 ## Anggota Kelompok A-6
 
-Nama	                            NPM
-Naurah Claradinda Aulia Pane	    2506657163
-Emil Ananta Kautsar 	            2506622121 
-Joanna Prittavidya Putri Arianto 	2506539265
-Razan Muhammad Fathin Lesmana	    2506603646 
-Goeij Angelatika Goeyanto	        2506656772 
+| Nama | NPM |
+|---|---|
+| Naurah Claradinda Aulia Pane | 2506657163 |
+| Emil Ananta Kautsar | 2506622121 |
+| Joanna Prittavidya Putri Arianto | 2506539265 |
+| Razan Muhammad Fathin Lesmana | 2506603646 |
+| Goeij Angelatika Goeyanto | 2506656772 |
 
 ## Jenis/Peran Pengguna
 
