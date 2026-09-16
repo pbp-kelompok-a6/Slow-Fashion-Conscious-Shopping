@@ -1,11 +1,12 @@
 ## Slow Fashion & Conscious Shopping
+### LaPAKAIAN — Gaya Berkelanjutan, Peduli Lingkungan
 
 Proyek Tengah Semester — Mata Kuliah Pemrograman Berbasis Platform (PBP)
 Fakultas Ilmu Komputer, Universitas Indonesia — Kelompok A-6
 
 ## Deskripsi Aplikasi
 
-Slow Fashion & Conscious Shopping adalah sebuah marketplace sederhana untuk jual-beli baju thrift/preloved secara online, dibangun di bawah payung tema besar Sustainable Living.
+LaPAKAIAN adalah sebuah marketplace sederhana untuk jual-beli baju thrift/preloved secara online, dibangun di bawah payung tema besar Sustainable Living.
 
 Baju bekas yang sebenarnya masih layak pakai sering kali berakhir menjadi sampah karena pemiliknya tidak tahu harus dijual ke mana. Di sisi lain, banyak calon pembeli yang ingin belanja lebih hemat sekaligus ramah lingkungan, tetapi kesulitan menemukan tempat jual-beli baju bekas yang rapi dan terpercaya.
 
