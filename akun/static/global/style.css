@@ -171,11 +171,18 @@ footer {
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .navbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .hero { padding: 60px 20px; }
   .hero h1 { font-size: 1.8rem; }
+  .hero .btn-primary,
+  .hero .btn-outline {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0 0 12px 0;
+  }
   .auth-box {
     margin: 40px 16px;
     padding: 24px;
   }
-  .hero { padding: 60px 20px; }
   .reasons { padding: 40px 20px; }
 }
