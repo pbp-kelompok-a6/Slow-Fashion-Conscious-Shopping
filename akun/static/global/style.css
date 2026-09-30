@@ -147,6 +147,18 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
 
+.auth-box ul.errorlist {
+  list-style: none;
+  padding: 0;
+  margin: -8px 0 12px 0;
+  color: #c0392b;
+  font-size: 0.85rem;
+}
+
+.auth-box ul.errorlist li {
+  margin-bottom: 4px;
+}
+
 .auth-box h2 { margin-bottom: 20px; }
 
 .auth-box input, .auth-box textarea {
