@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-box">
+  <h2>Profil Saya</h2>
+  <p>Username: {{ profile.user.username }}</p>
+  <p>Status: {% if profile.is_seller %}Seller{% else %}Buyer{% endif %}</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <label>Bio</label>
+    <textarea name="bio">{{ profile.bio }}</textarea>
+    <button type="submit" class="btn-primary">Simpan</button>
+  </form>
+
+  <button id="toggleSeller" class="btn-outline">
+    {% if profile.is_seller %}Nonaktifkan{% else %}Jadi{% endif %} Seller
+  </button>
+
+  <form method="POST" action="{% url 'akun:hapus_akun' %}" onsubmit="return confirm('Yakin hapus akun?');">
+    {% csrf_token %}
+    <button type="submit" class="btn-danger">Hapus Akun</button>
+  </form>
+</div>
+
+<script>
+document.getElementById("toggleSeller").addEventListener("click", async () => {
+  const res = await fetch("{% url 'akun:toggle_seller' %}", {
+    method: "POST",
+    headers: {"X-CSRFToken": getCookie("csrftoken")}
+  });
+  await res.json();
+  location.reload();
+});
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+</script>
+{% endblock %}

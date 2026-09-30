@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Fashion Kece, <span class="highlight">Bumi Senang</span>, Kantong Aman</h1>
+  <p>Temukan ribuan baju preloved berkualitas dengan harga mulai Rp 15.000.</p>
+  <a href="#" class="btn-primary">Lihat Katalog →</a>
+  <a href="{% url 'akun:profil' %}" class="btn-outline">Jadi Seller Gratis</a>
+</section>
+
+<section class="reasons">
+  <h2>Kenapa Thrift?</h2>
+  <div class="grid">
+    <div class="card">💰 <b>Hemat Lebih Banyak</b><p>Baju berkualitas branded harga jauh lebih murah.</p></div>
+    <div class="card">🌱 <b>Ramah Lingkungan</b><p>Mengurangi limbah tekstil lewat slow fashion.</p></div>
+    <div class="card">✨ <b>Temukan yang Unik</b><p>Baju vintage yang gak ada di toko lain.</p></div>
+    <div class="card">🤝 <b>Dukung UMKM Lokal</b><p>Setiap transaksi mendukung penjual lokal.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 LaPAKAIAN. Untuk bumi yang lebih baik.</p>
+</footer>
+{% endblock %}

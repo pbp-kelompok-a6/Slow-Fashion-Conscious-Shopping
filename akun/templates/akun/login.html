@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-box">
+  <h2>Masuk</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-primary">Masuk</button>
+  </form>
+  <p>Belum punya akun? <a href="{% url 'akun:register' %}">Daftar</a></p>
+</div>
+{% endblock %}
