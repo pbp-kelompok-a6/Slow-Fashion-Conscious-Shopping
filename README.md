@@ -9,7 +9,7 @@ LaPAKAIAN adalah marketplace sederhana tempat orang menjual dan membeli baju thr
 
 Baju bekas yang sebenarnya masih layak pakai sering kali berakhir menjadi sampah karena pemiliknya tidak tahu harus dijual ke mana. Di sisi lain, banyak calon pembeli yang ingin belanja lebih hemat sekaligus ramah lingkungan, tetapi kesulitan menemukan tempat jual-beli baju bekas yang rapi dan terpercaya.
 
-Aplikasi ini menjembatani kedua kebutuhan tersebut lewat satu akun untuk semua pengguna — mirip marketplace pada umumnya. Setiap pengguna bisa langsung menjelajah dan menyimpan baju favorit, sekaligus punya opsi untuk mulai berjualan kapan saja tanpa perlu akun terpisah, sehingga siklus hidup pakaian menjadi lebih panjang dan sampah fashion berkurang.
+Aplikasi ini menjembatani kedua kebutuhan tersebut lewat satu akun untuk semua pengguna. Setiap pengguna bisa langsung menjelajah katalog dan menyimpan baju favorit ke wishlist, sekaligus punya opsi untuk mulai berjualan kapan saja tanpa perlu akun terpisah. Dengan begitu, siklus hidup pakaian menjadi lebih panjang dan sampah fashion berkurang.
 
 ## Anggota Kelompok A-6
 
@@ -22,45 +22,74 @@ Aplikasi ini menjembatani kedua kebutuhan tersebut lewat satu akun untuk semua p
 | Goeij Angelatika Goeyanto | 2506656772 |
 
 ## Jenis/Peran Pengguna
-Aplikasi menggunakan **satu jenis akun** untuk seluruh pengguna (tidak ada pemilihan role terpisah saat registrasi). Setiap pengguna yang login otomatis bisa berperan sebagai:
 
-- **Buyer (Pembeli)** — peran default setelah login: menjelajah katalog, mencari/filter produk, dan mengelola wishlist pribadi.
-- **Seller (Penjual)** — peran tambahan yang bisa diaktifkan kapan saja lewat tombol "Jadi Seller" di navbar/profile. Setelah aktif, pengguna mendapat akses ke halaman My Listings untuk mengelola produk jualannya sendiri.
+Aplikasi memakai **satu jenis akun** untuk semua pengguna (tidak ada pilihan role saat registrasi). Setiap pengguna bisa berperan sebagai:
 
-Status seller disimpan sebagai field pada model profile (terhubung ke model User bawaan Django), sehingga satu akun bisa berperan sebagai buyer sekaligus seller secara bersamaan.
+- **Pengunjung (belum login)** — dapat menjelajah katalog, mencari/filter produk, dan membuka detail produk.
+- **Buyer (Pembeli)** — peran default setelah login: menyimpan baju ke wishlist, menulis ulasan.
+- **Seller (Penjual)** — peran tambahan yang diaktifkan lewat tombol "Jadi Seller". Setelah aktif, pengguna bisa mengelola listing baju dan profil tokonya.
 
-## Sumber Mock API
+Status seller disimpan sebagai field pada model Profile (terhubung ke model User bawaan Django), sehingga satu akun bisa menjadi buyer sekaligus seller.
 
-Aplikasi memakai mock API buatan sendiri berisi data size chart per brand (misalnya brand X ukuran M = lingkar dada sekian, panjang sekian). Data ini dipakai di halaman detail produk agar pembeli tahu ukuran pasti sebelum membeli, dan bisa difilter berdasarkan brand.
+## Sumber Public API / Mock API
+
+Aplikasi memakai **mock API** buatan sendiri yang di-deploy terpisah dari proyek ini, berisi data size chart per brand (misalnya brand X ukuran M = lingkar dada sekian, panjang sekian). Data ini ditampilkan di halaman detail produk agar pembeli tahu ukuran pasti sebelum membeli, dan bisa difilter berdasarkan brand.
+
+- Tautan mock API: *(isi setelah di-deploy)*
 
 ## Daftar Modul & Pembagian Kerja
 
-### 1. Landing Page & Autentikasi — Naurah
+Setiap anggota mengerjakan satu modul berbeda dengan CRUD lengkap.
 
-Halaman pertama yang dilihat pengguna serta alur pendaftaran akun.
+### 1. Akun, Profil & Landing Page — Naurah
 
-- **Landing Page**: hero section (banner & tagline), produk unggulan yang diambil dari data yang sudah diinput penjual, daftar kategori produk yang bisa diklik menuju katalog, serta tombol call-to-action "Shop Now" dan "Jadi Seller".
-- **Registrasi Akun**: pengguna baru mendaftar dengan satu jenis akun (tanpa pemilihan role di awal).
-- **Aktivasi Peran Seller**: pengguna yang sudah login dapat mengaktifkan status seller lewat tombol "Jadi Seller"; status ini disimpan pada model profile dan membuka akses ke halaman My Listings.
-- **Pengarahan Setelah Login**: pengguna login diarahkan ke halaman katalog/wishlist sebagai default. Menu "My Listings" hanya muncul untuk pengguna yang statusnya sudah seller.
+- **Model:** Profile (terhubung ke User bawaan Django)
+- **Views:** registrasi, lihat profil, edit profil, hapus akun, toggle status seller, plus endpoint JSON profil
+- **Form:** form registrasi dan form edit profil
+- **Interaktivitas:** toggle "Jadi Seller"/nonaktifkan tanpa reload halaman (AJAX)
+- **Filter autentikasi:** halaman profil, edit, dan hapus akun hanya bisa diakses pemilik akun yang sudah login
+- **Filter data:** menu "My Listings"/"Toko Saya" di navbar hanya muncul kalau status seller aktif
 
-### 2. Manajemen Produk (Sisi Seller) — Emil, Joanna
+### 2. Listing Baju — Angel
 
-CRUD penuh atas listing baju milik penjual, dengan filter berbasis autentikasi (hanya pemilik yang bisa mengelola listing-nya).
+- **Model:** Product (+ ProductImage kalau foto lebih dari satu)
+- **Views:** tambah, lihat (My Listings + Detail Produk), edit, hapus listing, plus endpoint JSON daftar produk
+- **Form:** form Tambah/Edit listing
+- **Interaktivitas:** hapus listing dan tandai "Sold" tanpa reload halaman (AJAX)
+- **Filter autentikasi:** hanya seller pemilik yang bisa membuka My Listings dan tombol edit/hapus
+- **Filter data:** My Listings bisa difilter per status (Aktif/Terjual) dan kategori
 
-- **Create**: mengisi form tambah baju (nama, brand, size, kondisi, harga, foto, kategori) lalu publish.
-- **Read**: melihat daftar baju yang dijual sendiri (My Listings) — difilter berdasarkan autentikasi, hanya pemilik yang bisa melihat.
-- **Update**: mengedit baju miliknya sendiri (misalnya mengubah harga atau status jadi "sold").
-- **Delete**: menghapus listing baju miliknya sendiri.
+### 3. Profil Toko & Size Chart — Emil
 
-### 3. Katalog & Keranjang (Sisi Buyer) — Razan, Angel
+- **Model:** Store, SizeChart (per brand)
+- **Views:** buka toko, lihat Profil Toko, edit profil, tutup toko, plus CRUD size chart dan endpoint JSON-nya
+- **Form:** form Buka/Edit toko dan form size chart
+- **Interaktivitas:** tab Semua/Tersedia/Terjual di Profil Toko berganti isi tanpa reload (AJAX)
+- **Filter autentikasi:** tombol "Chat via WhatsApp" (nomor seller) hanya muncul untuk pengguna yang sudah login
+- **Filter data:** produk di Profil Toko difilter Tersedia/Terjual
 
-Eksplorasi produk secara publik ditambah pengelolaan keranjang pribadi.
-- **Create**: pengguna yang sudah login dapat menyimpan baju ke keranjang dengan menekan tombol "Simpan".
-- **Read**: menjelajah seluruh baju thrift secara publik (tanpa perlu login), melakukan pencarian/filter berdasarkan kategori, brand, ukuran, kondisi, dan harga, serta membuka halaman detail tiap baju. Pengguna yang login juga bisa melihat keranjang miliknya sendiri.
-- **Update**: mengubah pilihan ukuran (size) pada item yang ada di keranjang, jika brand tersebut tersedia dalam beberapa ukuran.
-- **Delete**: menghapus baju dari keranjang miliknya sendiri.
+### 4. Katalog & Wishlist — Razan
+
+- **Model:** WishlistItem (menggunakan Product milik modul Listing Baju)
+- **Views:** Katalog (browse publik), tambah ke wishlist, lihat wishlist, edit catatan, hapus dari wishlist, plus endpoint JSON wishlist
+- **Form:** form catatan per item wishlist
+- **Interaktivitas:** ikon hati pada kartu produk toggle tanpa reload (AJAX)
+- **Filter autentikasi:** ikon hati dan halaman Wishlist hanya untuk pengguna login; tiap pengguna hanya melihat wishlist miliknya sendiri
+- **Filter data:** Katalog difilter berdasarkan brand, ukuran, kondisi, harga, plus sorting
+
+### 5. Ulasan — Joanna
+
+- **Model:** Review (terhubung ke Product atau Store)
+- **Views:** tambah ulasan, lihat daftar ulasan di Detail Produk, edit ulasan sendiri, hapus ulasan sendiri, plus endpoint JSON ulasan
+- **Form:** form tambah/edit ulasan (rating + komentar)
+- **Interaktivitas:** submit ulasan langsung muncul di daftar tanpa reload (AJAX)
+- **Filter autentikasi:** hanya pengguna login yang bisa menulis ulasan; hanya pemilik ulasan yang bisa mengedit/menghapus miliknya
+- **Filter data:** ulasan bisa di-sort berdasarkan terbaru atau rating tertinggi
+
+**Dikerjakan bersama:** base.html, header.html, footer.html, halaman Masuk/Daftar, dan halaman 404. Token warna, font, dan radius di-set sekali di konfigurasi framework CSS (Tailwind/Bootstrap), lalu dipakai bersama oleh seluruh modul agar tampilan konsisten dan responsif.
 
 ## Tautan
 
-- **Repository**: https://github.com/pbp-kelompok-a6/Slow-Fashion-Conscious-Shopping
+- **Repository:** https://github.com/pbp-kelompok-a6/Slow-Fashion-Conscious-Shopping
+- **Deployment PWS:** https://naurah-claradinda-lapakaian.pws.cs.ui.ac.id/
+- **Desain Figma:** *https://www.figma.com/design/usJgJikXCZoeA01cEsmww9/LaPAKAIAN?node-id=0-1&t=5A4BHUBT5zdI4J0A-1*

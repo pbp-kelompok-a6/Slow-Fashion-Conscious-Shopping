@@ -10,24 +10,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <nav class="navbar">
-    <a href="{% url 'landing' %}" class="logo">🌿 LaPAKAIAN <span>THRIFT & PRELOVED</span></a>
-    <div class="nav-links">
-      <a href="#">🏷️ Katalog</a>
-      {% if user.is_authenticated %}
-        <a href="#">🛍️ Keranjang</a>
-        {% if user.profile.is_seller %}
-          <a href="#">📦 Listing Saya</a>
-          <a href="#">🏬 Toko Saya</a>
-        {% endif %}
-        <a href="{% url 'akun:profil' %}">{{ user.username }}</a>
-        <a href="{% url 'akun:logout' %}">Keluar</a>
-      {% else %}
-        <a href="{% url 'akun:login' %}">Masuk</a>
-        <a href="{% url 'akun:register' %}">Daftar</a>
+ <nav class="navbar">
+  <a href="{% url 'landing' %}" class="logo">LaPAKAIAN</a>
+  <div class="nav-links">
+    <a href="#">Katalog</a>
+    <a href="#">Kategori</a>
+    {% if user.is_authenticated %}
+      {% if user.profile.is_seller %}
+        <a href="#">My Listings</a>
+        <a href="#">Toko Saya</a>
       {% endif %}
-    </div>
-  </nav>
+      <a href="{% url 'akun:profil' %}">{{ user.username }}</a>
+      <a href="{% url 'akun:logout' %}">Keluar</a>
+    {% else %}
+      <a href="{% url 'akun:login' %}">Masuk</a>
+      <a href="{% url 'akun:register' %}">Daftar</a>
+    {% endif %}
+  </div>
+</nav>
   <main>
     {% block content %}{% endblock %}
   </main>
