@@ -10,4 +10,7 @@ urlpatterns = [
     path("<int:pk>/edit/", views.product_edit, name="product_edit"),
     path("<int:pk>/hapus/", views.product_delete, name="product_delete"),
     path("<int:pk>/terjual/", views.product_mark_sold, name="product_mark_sold"),
+    path("<int:pk>/hapus/", views.product_delete, name="product_delete"),
+    path("<int:pk>/terjual/", views.product_mark_sold, name="product_mark_sold"),
+    path("api/products/", views.product_list_json, name="product_list_json"),
 ]

@@ -43,11 +43,10 @@ def seller_required(view_func):
     return wrapper
 
 
+
+
 @seller_required
 def product_create(request):
-    """
-    Display the Add Product form and save a new listing.
-    """
     product = Product(seller=request.user)
 
     if request.method == "POST":
@@ -58,7 +57,10 @@ def product_create(request):
             instance=product,
         )
 
-        if form.is_valid() and image_formset.is_valid():
+        form_valid = form.is_valid()
+        images_valid = image_formset.is_valid()
+
+        if form_valid and images_valid:
             product = form.save(commit=False)
             product.seller = request.user
             product.save()
@@ -66,8 +68,19 @@ def product_create(request):
             image_formset.instance = product
             image_formset.save()
 
-            messages.success(request, "Produk berhasil ditambahkan!")
+            messages.success(
+                request,
+                f'"{product.name}" berhasil ditambahkan!'
+            )
             return redirect("listing:my_listings")
+
+        print("PRODUCT FORM ERRORS:", form.errors)
+        print("IMAGE FORMSET ERRORS:", image_formset.errors)
+        print(
+            "IMAGE FORMSET NON-FORM ERRORS:",
+            image_formset.non_form_errors()
+        )
+
     else:
         form = ProductForm(instance=product)
         image_formset = ProductImageFormSet(instance=product)
@@ -79,8 +92,11 @@ def product_create(request):
             "form": form,
             "image_formset": image_formset,
             "page_title": "Tambah Produk",
+            "product": product,
         },
     )
+
+
 
 
 @seller_required
@@ -229,4 +245,53 @@ def product_mark_sold(request, pk):
         "message": "Produk berhasil ditandai sebagai terjual.",
         "status": product.status,
         "status_display": product.get_status_display()
+    })
+
+@seller_required
+def product_list_json(request):
+    products = Product.objects.filter(seller=request.user)
+
+    selected_status = request.GET.get("status", "")
+    selected_category = request.GET.get("category", "")
+
+    valid_statuses = dict(Product.STATUS_CHOICES)
+    valid_categories = dict(Product.CATEGORY_CHOICES)
+
+    if selected_status in valid_statuses:
+        products = products.filter(status=selected_status)
+
+    if selected_category in valid_categories:
+        products = products.filter(category=selected_category)
+
+    product_data = []
+
+    for product in products:
+        first_image = product.images.first()
+
+        image_url = (
+            first_image.image.url
+            if first_image and first_image.image
+            else None
+        )
+
+        product_data.append({
+            "id": product.pk,
+            "name": product.name,
+            "brand": product.brand,
+            "description": product.description,
+            "category": product.category,
+            "category_display": product.get_category_display(),
+            "size": product.size,
+            "condition": product.condition,
+            "condition_display": product.get_condition_display(),
+            "price": str(product.price),
+            "status": product.status,
+            "status_display": product.get_status_display(),
+            "image_url": image_url,
+            "created_at": product.created_at.isoformat(),
+        })
+
+    return JsonResponse({
+        "success": True,
+        "products": product_data,
     })
