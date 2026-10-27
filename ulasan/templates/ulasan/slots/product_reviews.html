@@ -1,0 +1,89 @@
+{% load static %}
+{% comment %}
+  Slot ulasan produk (milik modul ulasan).
+  Cara pakai di template lain (butuh variabel `product`):
+  {% include "ulasan/slots/product_reviews.html" %}
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'ulasan/ulasan.css' %}">
+
+<section class="section review-section">
+  <div class="section-head">
+    <h2>Ulasan Produk</h2>
+    <select id="review-sort" class="review-sort">
+      <option value="terbaru">Terbaru</option>
+      <option value="rating">Rating Tertinggi</option>
+    </select>
+  </div>
+
+  <p id="review-summary" class="review-summary"></p>
+
+  <div id="review-list" class="review-list">
+    <p class="review-empty">Memuat ulasan...</p>
+  </div>
+</section>
+
+<script>
+  const REVIEWS_JSON_URL = "{% url 'ulasan:show_json' product.pk %}";
+
+  // Mencegah XSS: data dari server dimasukkan ke innerHTML,
+  // jadi karakter khusus HTML harus di-escape dulu ("&" harus paling awal)
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function renderStars(rating) {
+    return "★".repeat(rating) + "☆".repeat(5 - rating);
+  }
+
+  function renderReview(review) {
+    return `
+      <article class="review-item">
+        <div class="review-head">
+          <strong>${escapeHtml(review.username)}</strong>
+          ${review.is_owner ? '<span class="review-badge">Ulasan kamu</span>' : ""}
+          <span class="review-date">
+            ${escapeHtml(review.created_at)}${review.is_edited ? " (diedit)" : ""}
+          </span>
+        </div>
+        <div class="review-stars" aria-label="Rating ${review.rating} dari 5">
+          ${renderStars(review.rating)}
+        </div>
+        <p class="review-comment">${escapeHtml(review.komentar)}</p>
+      </article>
+    `;
+  }
+
+  async function loadReviews() {
+    const list = document.getElementById("review-list");
+    const summary = document.getElementById("review-summary");
+    const sort = document.getElementById("review-sort").value;
+
+    try {
+      const response = await fetch(`${REVIEWS_JSON_URL}?sort=${encodeURIComponent(sort)}`);
+      if (!response.ok) {
+        throw new Error("Gagal memuat ulasan");
+      }
+      const data = await response.json();
+
+      if (data.jumlah === 0) {
+        summary.textContent = "";
+        list.innerHTML = '<p class="review-empty">Belum ada ulasan untuk produk ini.</p>';
+        return;
+      }
+
+      summary.textContent = `★ ${data.rata_rata} dari 5 · ${data.jumlah} ulasan`;
+      list.innerHTML = data.reviews.map(renderReview).join("");
+    } catch (error) {
+      list.innerHTML = '<p class="review-empty">Ulasan gagal dimuat. Coba muat ulang halaman.</p>';
+    }
+  }
+
+  // Ganti urutan tanpa reload halaman
+  document.getElementById("review-sort").addEventListener("change", loadReviews);
+  loadReviews();
+</script>

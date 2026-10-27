@@ -1,0 +1,72 @@
+/* ULASAN — memakai variabel warna dari global/style.css */
+.review-sort {
+  padding: 8px 12px;
+  border: 1px solid var(--black);
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-summary {
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-item {
+  border: 1px solid var(--black);
+  padding: 16px;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  background: var(--black);
+  color: var(--bg);
+}
+
+.review-date {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+
+.review-stars {
+  letter-spacing: 2px;
+  margin: 4px 0 8px;
+}
+
+.review-comment {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.review-empty {
+  color: var(--gray);
+}
+
+@media (max-width: 600px) {
+  .review-section .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .review-date { margin-left: 0; width: 100%; }
+}

@@ -1,8 +1,13 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 
 from listing.models import Product
 from .models import Review
+
+def product_reviews(request, product_id):
+    # Halaman daftar ulasan satu produk. Isi daftarnya dimuat lewat AJAX dari show_json.
+    product = get_object_or_404(Product, pk=product_id)
+    return render(request, "ulasan/product_reviews.html", {"product": product})
 
 def show_json(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
