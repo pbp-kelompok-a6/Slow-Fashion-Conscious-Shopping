@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Wishlist</h1>
+<p>{{ total }} barang tersimpan</p>
+<p><a href="{% url 'product_catalog:katalog' %}">Kembali ke katalog</a></p>
+<form method="get" action="{% url 'product_catalog:wishlist' %}">
+  <label for="category">Kategori</label>
+  <select id="category" name="category">
+    <option value="">Semua</option>
+    {% for value, label in categories %}
+      <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Terapkan</button>
+</form>
+{% for item, form in rows %}
+  <article>
+    <h2>{{ item.product.name }}</h2>
+    {% with image=item.product.images.all|first %}
+      {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:item.product.name }}">{% endif %}
+    {% endwith %}
+    <p>Rp{{ item.product.price }} | {{ item.product.brand }} | {{ item.product.size }}</p>
+    <p>{{ item.product.get_category_display }} | {{ item.product.get_condition_display }} | {{ item.product.get_status_display }}</p>
+    <p>Penjual: {{ item.product.seller.username }}</p>
+    <form method="post" action="{% url 'product_catalog:update_note' item.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      {{ form.as_p }}
+      <button type="submit">Simpan catatan</button>
+    </form>
+    <form method="post" action="{% url 'product_catalog:remove_item' item.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button type="submit">Hapus dari wishlist</button>
+    </form>
+  </article>
+{% empty %}
+  <p>{% if selected_category %}Belum ada barang di kategori ini.{% else %}Wishlist masih kosong. Simpan produk melalui katalog.{% endif %}</p>
+{% endfor %}
+{% endblock %}
