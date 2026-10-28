@@ -57,3 +57,107 @@ def katalog_json(request):
         },
         "products": [product_card_data(p) for p in page_obj.object_list],
     })
+
+# ---------- Wishlist ----------
+
+def wishlist_count(user):
+    return WishlistItem.objects.filter(user=user).count()
+
+
+def item_data(item):
+    return {
+        "id": item.pk,
+        "note": item.note,
+        "created_at": item.created_at.isoformat(),
+        "product": product_card_data(item.product),
+    }
+
+
+@login_required
+def wishlist(request):
+    items = (
+        WishlistItem.objects.filter(user=request.user)
+        .select_related("product", "product__seller")
+        .prefetch_related("product__images")
+    )
+    total = items.count()
+    category = request.GET.get("category", "")
+    if category in dict(Product.CATEGORY_CHOICES):
+        items = items.filter(product__category=category)
+    else:
+        category = ""
+    return render(request, "product_catalog/wishlist.html", {
+        "items": items,
+        "total": total,
+        "selected_category": category,
+        "categories": Product.CATEGORY_CHOICES,
+    })
+
+
+@login_required
+@require_POST
+def toggle_wishlist(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    item = WishlistItem.objects.filter(user=request.user, product=product).first()
+    if item:
+        item.delete()
+        in_wishlist = False
+        message = "Dihapus dari wishlist."
+    else:
+        WishlistItem.objects.create(user=request.user, product=product)
+        in_wishlist = True
+        message = "Ditambahkan ke wishlist."
+    return JsonResponse({
+        "success": True,
+        "message": message,
+        "in_wishlist": in_wishlist,
+        "product_id": product.pk,
+        "count": wishlist_count(request.user),
+    })
+
+
+@login_required
+@require_POST
+def update_note(request, item_id):
+    item = get_object_or_404(WishlistItem, pk=item_id, user=request.user)
+    form = WishlistNoteForm(request.POST, instance=item)
+    if not form.is_valid():
+        return JsonResponse({
+            "success": False,
+            "message": "Catatan gagal disimpan.",
+            "errors": form.errors.get_json_data(),
+        }, status=400)
+    form.save()
+    return JsonResponse({
+        "success": True,
+        "message": "Catatan disimpan.",
+        "note": item.note,
+    })
+
+
+@login_required
+@require_POST
+def remove_item(request, item_id):
+    item = get_object_or_404(WishlistItem, pk=item_id, user=request.user)
+    item.delete()
+    return JsonResponse({
+        "success": True,
+        "message": "Dihapus dari wishlist.",
+        "count": wishlist_count(request.user),
+    })
+
+
+@login_required
+@require_GET
+def wishlist_json(request):
+    items = (
+        WishlistItem.objects.filter(user=request.user)
+        .select_related("product", "product__seller")
+        .prefetch_related("product__images")
+    )
+    return JsonResponse({
+        "success": True,
+        "message": "OK",
+        "count": len(items),
+        "items": [item_data(item) for item in items],
+    })

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "akun",
     "listing",
+    "product_catalog", 
 ]
 
 MIDDLEWARE = [
