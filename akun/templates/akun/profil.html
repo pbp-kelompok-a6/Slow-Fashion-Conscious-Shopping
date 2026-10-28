@@ -1,40 +1,118 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-<div class="auth-box">
-  <h2>Profil Saya</h2>
-  <p>Username: {{ profile.user.username }}</p>
-  <p>Status: {% if profile.is_seller %}Seller{% else %}Buyer{% endif %}</p>
+<link rel="stylesheet" href="{% static 'akun/akun.css' %}">
 
-  <form method="POST">
-    {% csrf_token %}
-    <label>Bio</label>
-    <textarea name="bio">{{ profile.bio }}</textarea>
-    <button type="submit" class="btn-primary">Simpan</button>
-  </form>
+<section class="section profil-page">
+  <div class="page-head"><h1 class="profil-title">Profil Saya</h1></div>
 
-  <button id="toggleSeller" class="btn-outline">
-    {% if profile.is_seller %}Nonaktifkan{% else %}Jadi{% endif %} Seller
-  </button>
+  <div class="profil-grid">
+    <article class="profil-card">
+      <h2 class="profil-card-title">Info Akun</h2>
+      <div class="profil-identity">
+        <div>
+          <p class="profil-username">{{ profile.user.username }}</p>
+          <p class="muted">Bergabung sejak {{ profile.user.date_joined|date:"j M Y" }}</p>
+        </div>
+      </div>
+    </article>
 
-  <form method="POST" action="{% url 'akun:hapus_akun' %}" onsubmit="return confirm('Yakin hapus akun?');">
-    {% csrf_token %}
-    <button type="submit" class="btn-danger">Hapus Akun</button>
-  </form>
-</div>
+    <article class="profil-card">
+      <div class="profil-card-head">
+        <h2 class="profil-card-title">Bio</h2>
+        <button type="button" class="link-btn" id="bio-edit-btn">Edit</button>
+      </div>
+      <p id="bio-text" class="profil-bio{% if not profile.bio %} muted{% endif %}">{{ profile.bio|default:"Belum ada bio." }}</p>
+
+      <form id="bio-form" method="POST" action="{% url 'akun:edit_profil' %}" hidden>
+        {% csrf_token %}
+        <textarea name="bio" rows="4" maxlength="200">{{ profile.bio }}</textarea>
+        <div class="btn-row">
+          <button type="submit" class="btn-primary btn-sm">Simpan</button>
+          <button type="button" class="btn-outline btn-sm" id="bio-cancel-btn">Batal</button>
+        </div>
+      </form>
+    </article>
+
+    <article class="profil-card">
+      <h2 class="profil-card-title">Status Akun</h2>
+      <p class="profil-status">Status:
+        <span class="badge{% if profile.is_seller %} badge-active{% endif %}" id="seller-status">{% if profile.is_seller %}Seller{% else %}Buyer{% endif %}</span>
+      </p>
+      <p class="muted" id="seller-desc"
+         data-seller-text="Kamu bisa menjual barang dan mengelola toko."
+         data-buyer-text="Aktifkan mode seller untuk mulai menjual baju preloved.">
+        {% if profile.is_seller %}Kamu bisa menjual barang dan mengelola toko.{% else %}Aktifkan mode seller untuk mulai menjual baju preloved.{% endif %}
+      </p>
+      <div class="btn-row">
+        <button type="button" id="toggleSeller" class="{% if profile.is_seller %}btn-outline{% else %}btn-primary{% endif %}">
+          {% if profile.is_seller %}Nonaktifkan Seller{% else %}Jadi Seller{% endif %}
+        </button>
+      </div>
+    </article>
+
+    <article class="profil-card profil-danger">
+      <h2 class="profil-card-title">Zona Bahaya</h2>
+      <p class="muted">Menghapus akun akan menghapus profil, listing, dan data lain milikmu secara permanen.</p>
+      <form method="POST" action="{% url 'akun:hapus_akun' %}" onsubmit="return confirm('Yakin hapus akun?');">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Hapus Akun</button>
+      </form>
+    </article>
+  </div>
+</section>
 
 <script>
-document.getElementById("toggleSeller").addEventListener("click", async () => {
-  const res = await fetch("{% url 'akun:toggle_seller' %}", {
-    method: "POST",
-    headers: {"X-CSRFToken": getCookie("csrftoken")}
+// Edit bio: hanya tampil/sembunyi form di dalam kartu (simpan tetap POST biasa)
+  (function () {
+    const form = document.getElementById("bio-form");
+    const text = document.getElementById("bio-text");
+    const editBtn = document.getElementById("bio-edit-btn");
+    function setEditing(on) {
+      form.hidden = !on;
+      text.hidden = on;
+      editBtn.hidden = on;
+      if (on) form.querySelector("textarea").focus();
+    }
+    editBtn.addEventListener("click", () => setEditing(true));
+    document.getElementById("bio-cancel-btn").addEventListener("click", () => {
+      form.reset();
+      setEditing(false);
+    });
+  })();
+  {% comment %} JavaScript mengirim POST
+fetch() menghubungi URL toggle seller. {% endcomment %}
+  // Toggle seller (AJAX): kirim fetch, lalu ubah tampilan dari respons JSON tanpa reload
+  {% comment %} JavaScript mendeteksi klik dan mengirim request {% endcomment %}
+  document.getElementById("toggleSeller").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const sedangSeller = btn.classList.contains("btn-outline");
+    if (sedangSeller && !confirm("Nonaktifkan mode seller? Menu My Listings akan disembunyikan.")) return;
+
+    btn.disabled = true;
+    const res = await fetch("{% url 'akun:toggle_seller' %}", { // Request dikirim ke URL, lalu Django mencocokkan URL tersebut dengan urls.py dan menjalankan view yang sesuai.
+      method: "POST",
+      headers: {"X-CSRFToken": getCookie("csrftoken")}
+    });
+    btn.disabled = false;
+    if (!res.ok) return;
+    const data = await res.json(); //nunggu views.py, cm baca respons json dari django
+
+    const status = document.getElementById("seller-status");
+    const desc = document.getElementById("seller-desc");
+    status.textContent = data.is_seller ? "Seller" : "Buyer";
+    status.classList.toggle("badge-active", data.is_seller); 
+    desc.textContent = data.is_seller ? desc.dataset.sellerText : desc.dataset.buyerText;
+    btn.textContent = data.is_seller ? "Nonaktifkan Seller" : "Jadi Seller";
+    btn.classList.toggle("btn-primary", !data.is_seller);
+    btn.classList.toggle("btn-outline", data.is_seller);
+    document.querySelectorAll("[data-seller-nav]").forEach((el) => { el.hidden = !data.is_seller; });
   });
-  await res.json();
-  location.reload();
-});
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(";").shift();
-}
-</script>
-{% endblock %}
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+  </script>
+  {% endblock %}
