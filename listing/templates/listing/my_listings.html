@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <h1>My Listings</h1>
+
+        <a href="{% url 'listing:product_create' %}"
+           class="btn-primary">
+            + Tambah Produk
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="get">
+        <label for="status">Status:</label>
+
+        <select name="status" id="status">
+            <option value="">Semua Status</option>
+
+            {% for value, label in status_choices %}
+                <option value="{{ value }}"
+                    {% if selected_status == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="category">Kategori:</label>
+
+        <select name="category" id="category">
+            <option value="">Semua Kategori</option>
+
+            {% for value, label in category_choices %}
+                <option value="{{ value }}"
+                    {% if selected_category == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filter</button>
+        <a href="{% url 'listing:my_listings' %}">Reset</a>
+    </form>
+
+    <hr>
+    <div id="ajax-message" role="status" aria-live="polite"></div>
+    
+    {% for product in products %}
+        <article class="product-card" id="product-{{ product.pk }}">
+            {% with first_image=product.images.first %}
+                {% if first_image %}
+                    <img
+                        src="{{ first_image.image.url }}"
+                        alt="{{ first_image.alt_text|default:product.name }}"
+                        width="200"
+                    >
+                {% endif %}
+            {% endwith %}
+
+            <div class="product-info">
+                <h2>{{ product.name }}</h2>
+
+                <p>
+                    Brand:
+                    {{ product.brand|default:"Tanpa brand" }}
+                </p>
+
+                <p>
+                    Kategori: {{ product.get_category_display }}
+                </p>
+
+                <p>
+                    Harga: Rp {{ product.price }}
+                </p>
+
+                <p>
+                    Status: {{ product.get_status_display }}
+                </p>
+
+                <a href="{% url 'listing:product_detail' product.pk %}">
+                    Lihat Detail
+                </a>
+
+                {% if product.status == "active" %}
+                <button
+                    type="button"
+                    class="mark-sold-btn"
+                    data-url="{% url 'listing:product_mark_sold' product.pk %}">
+                    Mark as Sold
+                </button>
+            {% endif %}
+
+            <button
+                type="button"
+                class="delete-product-btn"
+                data-url="{% url 'listing:product_delete' product.pk %}">
+                Delete
+            </button>
+            </div>
+
+        </article>
+    {% empty %}
+        <p>Belum ada produk yang sesuai dengan filter.</p>
+    {% endfor %}
+</section>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const messageBox = document.getElementById("ajax-message");
+
+    function showMessage(message, isError = false) {
+        messageBox.textContent = message;
+        messageBox.style.color = isError ? "red" : "green";
+    }
+
+    function getCookie(name) {
+        const cookies = document.cookie ? document.cookie.split(";") : [];
+
+        for (const cookie of cookies) {
+            const trimmedCookie = cookie.trim();
+
+            if (trimmedCookie.startsWith(name + "=")) {
+                return decodeURIComponent(
+                    trimmedCookie.substring(name.length + 1)
+                );
+            }
+        }
+
+        return null;
+    }
+
+    async function sendPostRequest(url) {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "same-origin"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Terjadi kesalahan.");
+        }
+
+        return data;
+    }
+
+    document.querySelectorAll(".mark-sold-btn").forEach(function (button) {
+        button.addEventListener("click", async function () {
+            const confirmed = confirm(
+                "Apakah kamu yakin ingin menandai produk ini sebagai terjual?"
+            );
+
+            if (!confirmed) return;
+
+            button.disabled = true;
+
+            try {
+                const data = await sendPostRequest(button.dataset.url);
+                const card = button.closest(".product-card");
+
+                const statusParagraph = Array.from(
+                    card.querySelectorAll("p")
+                ).find(function (paragraph) {
+                    return paragraph.textContent.trim().startsWith("Status:");
+                });
+
+                if (statusParagraph) {
+                    statusParagraph.textContent = "Status: " + data.status_display;
+                }
+
+                button.remove();
+                showMessage(data.message);
+            } catch (error) {
+                showMessage(error.message, true);
+                button.disabled = false;
+            }
+        });
+    });
+
+    document.querySelectorAll(".delete-product-btn").forEach(function (button) {
+        button.addEventListener("click", async function () {
+            const confirmed = confirm(
+                "Apakah kamu yakin ingin menghapus produk ini? Tindakan ini tidak bisa dibatalkan."
+            );
+
+            if (!confirmed) return;
+
+            button.disabled = true;
+
+            try {
+                const data = await sendPostRequest(button.dataset.url);
+                const card = button.closest(".product-card");
+
+                if (card) {
+                    card.remove();
+                }
+
+                showMessage(data.message);
+            } catch (error) {
+                showMessage(error.message, true);
+                button.disabled = false;
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
