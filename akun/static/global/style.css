@@ -243,6 +243,11 @@ a { text-decoration: none; color: inherit; }
 }
 
 .auth-box ul li { margin-bottom: 4px; }
+.auth-box .errorlist,
+.auth-box .errorlist li {
+  color: #B33A3A;
+  font-weight: 600;
+}
 
 .auth-box p { margin-top: 16px; font-size: 0.9rem; }
 
