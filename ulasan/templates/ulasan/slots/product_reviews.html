@@ -17,6 +17,39 @@
 
   <p id="review-summary" class="review-summary"></p>
 
+  {% comment %} Filter autentikasi: form hanya untuk pengguna login yang bukan pemilik produk {% endcomment %}
+  {% if not user.is_authenticated %}
+    <p class="review-note">
+      <a href="{% url 'akun:login' %}" class="review-link">Masuk</a> untuk menulis ulasan.
+    </p>
+  {% elif product.seller_id == user.id %}
+    <p class="review-note">Ini produkmu sendiri, jadi kamu tidak bisa mengulasnya.</p>
+  {% else %}
+    <p id="review-already" class="review-note" hidden>Kamu sudah mengulas produk ini.</p>
+
+    <form id="review-form" class="review-form" hidden>
+      {% csrf_token %}
+      <label for="review-rating">Rating</label>
+      <select id="review-rating" name="rating" required>
+        <option value="">Pilih rating</option>
+        <option value="5">★★★★★ (5 - Sangat Baik)</option>
+        <option value="4">★★★★☆ (4 - Baik)</option>
+        <option value="3">★★★☆☆ (3 - Cukup)</option>
+        <option value="2">★★☆☆☆ (2 - Buruk)</option>
+        <option value="1">★☆☆☆☆ (1 - Sangat Buruk)</option>
+      </select>
+      <p class="review-error" data-error-for="rating"></p>
+
+      <label for="review-komentar">Komentar</label>
+      <textarea id="review-komentar" name="komentar" rows="4" maxlength="1000" required
+        placeholder="Ceritakan pengalamanmu dengan produk ini..."></textarea>
+      <p class="review-error" data-error-for="komentar"></p>
+
+      <button type="submit" id="review-submit" class="btn-primary">Kirim Ulasan</button>
+      <p id="review-form-message" class="review-message" role="status"></p>
+    </form>
+  {% endif %}
+
   <div id="review-list" class="review-list">
     <p class="review-empty">Memuat ulasan...</p>
   </div>
@@ -70,6 +103,14 @@
       }
       const data = await response.json();
 
+      // Satu ulasan per produk: kalau user sudah punya ulasan, sembunyikan form-nya
+      const form = document.getElementById("review-form");
+      if (form) {
+        const alreadyReviewed = data.reviews.some((review) => review.is_owner);
+        form.hidden = alreadyReviewed;
+        document.getElementById("review-already").hidden = !alreadyReviewed;
+      }
+
       if (data.jumlah === 0) {
         summary.textContent = "";
         list.innerHTML = '<p class="review-empty">Belum ada ulasan untuk produk ini.</p>';
@@ -86,4 +127,52 @@
   // Ganti urutan tanpa reload halaman
   document.getElementById("review-sort").addEventListener("change", loadReviews);
   loadReviews();
+
+  // Tambah ulasan via AJAX (form hanya ada kalau user boleh mengulas)
+  const reviewForm = document.getElementById("review-form");
+  if (reviewForm) {
+    const CREATE_REVIEW_URL = "{% url 'ulasan:create_review' product.pk %}";
+
+    reviewForm.addEventListener("submit", async (event) => {
+      event.preventDefault();  // cegah form reload halaman
+
+      const submitButton = document.getElementById("review-submit");
+      const message = document.getElementById("review-form-message");
+      reviewForm.querySelectorAll(".review-error").forEach((el) => (el.textContent = ""));
+      message.textContent = "";
+      message.classList.remove("is-error");
+      submitButton.disabled = true;
+
+      try {
+        // FormData ikut membawa csrfmiddlewaretoken dari {% csrf_token %}
+        const response = await fetch(CREATE_REVIEW_URL, {
+          method: "POST",
+          body: new FormData(reviewForm),
+        });
+        const result = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          reviewForm.reset();
+          message.textContent = result.message;
+          loadReviews();  // ulasan baru langsung muncul tanpa reload
+        } else {
+          // 400: tampilkan error per field di bawah input masing-masing
+          const errors = result.errors || {};
+          for (const field in errors) {
+            const target = reviewForm.querySelector(`[data-error-for="${field}"]`);
+            if (target) {
+              target.textContent = errors[field].map((e) => e.message).join(" ");
+            }
+          }
+          message.textContent = result.message || "Terjadi kesalahan. Coba lagi.";
+          message.classList.add("is-error");
+        }
+      } catch (error) {
+        message.textContent = "Tidak dapat terhubung ke server. Coba lagi.";
+        message.classList.add("is-error");
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  }
 </script>

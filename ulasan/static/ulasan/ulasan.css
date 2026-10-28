@@ -62,6 +62,65 @@
   color: var(--gray);
 }
 
+/* FORM ULASAN */
+.review-note {
+  margin-bottom: 16px;
+  color: var(--gray);
+}
+
+.review-link {
+  font-weight: 700;
+  color: var(--black);
+  text-decoration: underline;
+}
+
+.review-form {
+  border: 1px solid var(--black);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.review-form label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--black);
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.review-form button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.review-error {
+  min-height: 1.2em;
+  margin: 4px 0 10px;
+  font-size: 0.8rem;
+  color: #B33A3A;
+}
+
+.review-message {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.review-message.is-error {
+  color: #B33A3A;
+}
+
 @media (max-width: 600px) {
   .review-section .section-head {
     flex-direction: column;

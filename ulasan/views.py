@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 from listing.models import Product
+from .forms import ReviewForm
 from .models import Review
 
 def product_reviews(request, product_id):
@@ -45,3 +47,34 @@ def show_json(request, product_id):
         "rata_rata": rata_rata,
         "reviews": data,
     })
+
+# Tidak memakai @login_required: untuk request AJAX, login_required akan redirect
+# ke halaman login (HTML, status 200) sehingga fetch tidak tahu kalau gagal.
+# Jadi pengecekan login dilakukan manual dan dibalas JSON 403 (Tutorial 5).
+@require_POST
+def create_review(request, product_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Kamu harus login untuk menulis ulasan."}, status=403)
+
+    product = get_object_or_404(Product, pk=product_id)
+
+    if product.seller_id == request.user.id:
+        return JsonResponse({"message": "Kamu tidak bisa mengulas produkmu sendiri."}, status=403)
+
+    if Review.objects.filter(product=product, user=request.user).exists():
+        return JsonResponse({"message": "Kamu sudah mengulas produk ini."}, status=400)
+
+    form = ReviewForm(request.POST)
+    if form.is_valid():
+        # commit=False: objek dibuat tapi belum disimpan, karena product dan user
+        # tidak ada di form dan harus diisi dulu dari view
+        review = form.save(commit=False)
+        review.product = product
+        review.user = request.user
+        review.save()
+        return JsonResponse({"message": "Ulasan berhasil dikirim. Terima kasih!"}, status=201)
+
+    return JsonResponse({
+        "message": "Ulasan gagal dikirim. Periksa kembali isian kamu.",
+        "errors": form.errors.get_json_data(),
+    }, status=400)
