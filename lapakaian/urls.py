@@ -26,6 +26,7 @@ urlpatterns = [
     path("", akun_views.landing, name="landing"),
     path("akun/", include("akun.urls")),
     path("listing/", include("listing.urls")),
+    path("toko/", include("profil_toko.urls")),
 ]
 
 if settings.DEBUG:

@@ -17,7 +17,7 @@
     <a href="#">Kategori</a>
     {% if user.is_authenticated %}
       <a href="{% url 'listing:my_listings' %}" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>My Listings</a>
-      <a href="#" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>Toko Saya</a>
+      <a href="{% url 'profil_toko:toko_saya' %}" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>Toko Saya</a>
       <a href="{% url 'akun:profil' %}">{{ user.username }}</a>
       <a href="{% url 'akun:logout' %}">Keluar</a>
     {% else %}
