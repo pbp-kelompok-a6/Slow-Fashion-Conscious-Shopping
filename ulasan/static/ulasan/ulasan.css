@@ -1,0 +1,165 @@
+/* ULASAN — memakai variabel warna dari global/style.css */
+.review-sort {
+  padding: 8px 12px;
+  border: 1px solid var(--black);
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-summary {
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-item {
+  border: 1px solid var(--black);
+  padding: 16px;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  background: var(--black);
+  color: var(--bg);
+}
+
+.review-date {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+
+.review-stars {
+  letter-spacing: 2px;
+  margin: 4px 0 8px;
+}
+
+.review-comment {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.review-empty {
+  color: var(--gray);
+}
+
+.review-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.review-action {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--black);
+}
+
+.review-action.is-danger {
+  color: #B33A3A;
+}
+
+.review-action:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.review-edit-form {
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+/* FORM ULASAN */
+.review-note {
+  margin-bottom: 16px;
+  color: var(--gray);
+}
+
+.review-link {
+  font-weight: 700;
+  color: var(--black);
+  text-decoration: underline;
+}
+
+.review-form {
+  border: 1px solid var(--black);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.review-form label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--black);
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.review-form button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.review-error {
+  min-height: 1.2em;
+  margin: 4px 0 10px;
+  font-size: 0.8rem;
+  color: #B33A3A;
+}
+
+.review-message {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.review-message.is-error {
+  color: #B33A3A;
+}
+
+@media (max-width: 600px) {
+  .review-section .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .review-date { margin-left: 0; width: 100%; }
+}
