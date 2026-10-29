@@ -7,6 +7,9 @@ from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
+from django.db import transaction
+from pesanan.guards import delete_listing, set_listing_status
+from pesanan.validation import DomainError
 
 from akun.models import Profile
 from .forms import ProductForm, ProductImageFormSet
@@ -198,8 +201,12 @@ def product_edit(request, pk):
         )
 
         if form.is_valid() and image_formset.is_valid():
-            form.save()
-            image_formset.save()
+            with transaction.atomic():
+                # A form loaded before checkout must not write its stale active
+                # status back over a newly sold listing.
+                edited = form.save(commit=False)
+                edited.save(update_fields=[*form.Meta.fields, "updated_at"])
+                image_formset.save()
 
             messages.success(
                 request,
@@ -235,7 +242,10 @@ def product_edit(request, pk):
 def product_delete(request, pk):
     product = get_own_product(request, pk)
 
-    product.delete()
+    try:
+        delete_listing(request.user.pk, product.pk)
+    except DomainError as exc:
+        return JsonResponse({"success": False, "code": exc.code, "message": exc.message}, status=exc.status)
 
     return JsonResponse({
         "success": True,
@@ -248,14 +258,11 @@ def product_delete(request, pk):
 def _set_status(request, pk, new_status, already_message, success_message):
     product = get_own_product(request, pk)
 
-    if product.status == new_status:
-        return JsonResponse({
-            "success": False,
-            "message": already_message,
-        }, status=400)
-
-    product.status = new_status
-    product.save(update_fields=["status", "updated_at"])
+    try:
+        set_listing_status(request.user.pk, product.pk, new_status)
+    except DomainError as exc:
+        return JsonResponse({"success": False, "code": exc.code, "message": exc.message}, status=exc.status)
+    product.refresh_from_db()
 
     return JsonResponse({
         "success": True,

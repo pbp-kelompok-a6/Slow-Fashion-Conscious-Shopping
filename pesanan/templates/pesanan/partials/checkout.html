@@ -1,0 +1,31 @@
+{% load format_tags %}
+<section class="ps-page" data-ps-page="checkout">
+  <header class="ps-heading"><div><p class="ps-eyebrow">Periksa sebelum konfirmasi</p><h1>Checkout</h1></div><a href="{% url 'pesanan:cart_page' %}">&larr; Keranjang</a></header>
+  <p class="ps-notice">Simulasi transaksi. Tidak ada uang yang dipindahkan atau pembayaran nyata.</p>
+  <div class="ps-panel" data-checkout-recovery hidden><h2>Percobaan checkout tersimpan</h2><p>Hasil permintaan sebelumnya belum dikonfirmasi. Coba kembali dengan data yang sama agar pesanan tidak dibuat dua kali.</p><button type="button" class="btn-primary" data-checkout-retry>Coba checkout kembali</button><a href="{% url 'pesanan:purchases_page' %}">Lihat pesanan saya</a></div>
+  {% if submit_error %}<p class="ps-error" role="alert">{{ submit_error }}</p>{% endif %}
+  {% if quote_error %}<div class="ps-empty" data-checkout-new><p role="alert">{{ quote_error }}</p><a class="btn-outline" href="{% url 'pesanan:cart_page' %}">Periksa keranjang</a></div>
+  {% else %}
+  <div class="ps-checkout-layout" data-checkout-new>
+    <form method="post" action="{% url 'pesanan:checkout_submit_page' %}" data-checkout-form class="ps-panel ps-form">
+      {% csrf_token %}{% for pk in selected_ids %}<input type="hidden" name="product_ids" value="{{ pk }}">{% endfor %}
+      <input type="hidden" name="quote_token" value="{{ quote.quote_token }}"><input type="hidden" name="idempotency_key" value="{{ checkout_key }}">
+      <h2>Alamat pengiriman</h2>
+      <div class="ps-field"><label for="ps-recipient">Nama penerima</label><input id="ps-recipient" name="recipient_name" autocomplete="shipping name" maxlength="100" required value="{{ checkout_form.recipient_name.value|default_if_none:'' }}">{{ checkout_form.recipient_name.errors }}<p data-field-error="recipient_name" class="ps-error"></p></div>
+      <div class="ps-field"><label for="ps-phone">Nomor telepon</label><input id="ps-phone" name="phone" type="tel" autocomplete="shipping tel" minlength="7" maxlength="25" required value="{{ checkout_form.phone.value|default_if_none:'' }}">{{ checkout_form.phone.errors }}<p data-field-error="phone" class="ps-error"></p></div>
+      <div class="ps-field"><label for="ps-address">Alamat lengkap</label><textarea id="ps-address" name="address" autocomplete="shipping street-address" minlength="10" maxlength="1000" rows="4" required placeholder="Jalan, nomor rumah, kecamatan, kota, dan kode pos">{{ checkout_form.address.value|default_if_none:'' }}</textarea>{{ checkout_form.address.errors }}<p data-field-error="address" class="ps-error"></p></div>
+      <fieldset class="ps-payment"><legend>Metode pembayaran simulasi</legend>
+        {% for value,label in checkout_form.payment_method.field.choices %}<label><input type="radio" name="payment_method" value="{{ value }}" {% if checkout_form.payment_method.value == value %}checked{% endif %} required> {{ label }}</label>{% endfor %}
+      </fieldset>{{ checkout_form.payment_method.errors }}<p data-field-error="payment_method" class="ps-error"></p>
+      <p class="ps-muted">Transfer/e-wallet langsung tercatat dibayar dalam simulasi. COD belum dibayar sampai pesanan diselesaikan.</p>
+      <button type="submit" class="btn-primary" data-checkout-submit>Konfirmasi &amp; buat pesanan</button>
+      <noscript><p>Jangan mengubah halaman saat pengiriman berlangsung. Mengirim ulang form yang sama tidak menggandakan pesanan.</p></noscript>
+    </form>
+    <aside class="ps-stack" aria-label="Ringkasan checkout">
+      {% for group in groups %}<section class="ps-panel"><h2>{{ group.seller.store.name|default:group.seller.username }}</h2>
+        {% for row in group.products %}<div class="ps-summary-item"><a href="{% url 'listing:product_detail' row.product.pk %}">{{ row.product.name }}</a><span>{{ row.price|rupiah }}</span></div>{% endfor %}
+        <dl class="ps-totals"><div><dt>Subtotal</dt><dd>{{ group.subtotal|rupiah }}</dd></div><div><dt>Ongkir</dt><dd>{{ group.shipping_cost|rupiah }}</dd></div><div><dt>Total toko</dt><dd>{{ group.total|rupiah }}</dd></div></dl>
+      </section>{% endfor %}<div class="ps-panel ps-grand-total"><span>Total {{ groups|length }} toko</span><strong>{{ quote.total|rupiah }}</strong></div>
+    </aside>
+  </div>{% endif %}
+</section>

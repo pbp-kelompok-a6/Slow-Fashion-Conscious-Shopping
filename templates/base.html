@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaPAKAIAN</title>
+  <title>{% block title %}LaPAKAIAN{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'global/style.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'pesanan/pesanan.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -15,22 +16,29 @@
   <a href="{% url 'landing' %}" class="logo">LaPAKAIAN</a>
   <div class="nav-links">
     <a href="{% url 'product_catalog:katalog' %}">Katalog</a>
-    <a href="#">Kategori</a>
+    <a href="{% url 'product_catalog:katalog' %}">Kategori</a>
     {% if user.is_authenticated %}
       <a href="{% url 'listing:my_listings' %}" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>My Listings</a>
       <a href="{% url 'profil_toko:toko_saya' %}" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>Toko Saya</a>
       <a href="{% url 'product_catalog:wishlist' %}">Wishlist</a>
+      <a href="{% url 'pesanan:cart_page' %}">Keranjang <span class="ps-badge" data-cart-count aria-label="{{ cart_purchasable_count }} barang bisa dibeli">{{ cart_purchasable_count }}</span></a>
+      <a href="{% url 'pesanan:purchases_page' %}">Pesanan saya</a>
+      {% if user.profile.is_seller or pesanan_has_sales %}<a href="{% url 'pesanan:sales_page' %}">Pesanan masuk</a>{% endif %}
       <a href="{% url 'akun:profil' %}">{{ user.username }}</a>
-      <a href="{% url 'akun:logout' %}">Keluar</a>
+      <form class="nav-logout" method="post" action="{% url 'akun:logout' %}">{% csrf_token %}<button type="submit">Keluar</button></form>
     {% else %}
       <a href="{% url 'akun:login' %}">Masuk</a>
       <a href="{% url 'akun:register' %}">Daftar</a>
     {% endif %}
   </div>
 </nav>
+  {% if messages %}<div class="messages" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
   <main>
     {% block content %}{% endblock %}
   </main>
+  <div id="pesanan-config" hidden data-user-id="{{ user.pk|default:'' }}" data-login="{% url 'akun:login' %}" data-cart-api="{% url 'pesanan:cart' %}" data-add-api="{% url 'pesanan:cart_add' %}" data-remove-api="{% url 'pesanan:cart_remove' %}" data-checkout-api="{% url 'pesanan:checkout' %}" data-cart-page="{% url 'pesanan:cart_page' %}" data-order-page="{% url 'pesanan:purchases_page' %}" data-success-url="{% url 'pesanan:success_page' 0 %}">{% csrf_token %}</div>
+  <script src="{% static 'pesanan/checkout_state.js' %}" defer></script>
+  <script src="{% static 'pesanan/pesanan.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

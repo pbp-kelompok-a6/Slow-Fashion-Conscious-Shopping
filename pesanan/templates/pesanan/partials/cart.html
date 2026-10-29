@@ -1,0 +1,18 @@
+{% load format_tags %}
+<section class="ps-page" data-ps-page="cart">
+  <header class="ps-heading"><div><p class="ps-eyebrow">Satu barang, kesempatan baru</p><h1>Keranjang</h1></div><a href="{% url 'product_catalog:katalog' %}">Lanjut belanja &rarr;</a></header>
+  <p class="ps-muted">{{ cart_purchasable_count }} barang bisa dibeli. Setiap listing hanya satu unit; ongkir Rp15.000 per toko.</p>
+  <form method="get" action="{% url 'pesanan:checkout_page' %}" id="ps-selection" class="ps-stack">
+  {% for group in groups %}
+    <section class="ps-panel"><h2>{{ group.seller.store.name|default:group.seller.username }}</h2>
+    {% for row in group.rows %}<article class="ps-cart-row" data-cart-row data-product-id="{{ row.product.pk }}">
+      <input type="checkbox" name="product_ids" value="{{ row.product.pk }}" aria-label="Pilih {{ row.product.name }}" {% if row.available %}checked{% else %}disabled{% endif %}>
+      <a class="ps-thumbnail" href="{% url 'listing:product_detail' row.product.pk %}">{% with image=row.product.images.all|first %}{% if image %}<img src="{{ image.image.url }}" alt="{{ row.product.name }}">{% else %}<span>Tanpa foto</span>{% endif %}{% endwith %}</a>
+      <div class="ps-grow"><h3><a href="{% url 'listing:product_detail' row.product.pk %}">{{ row.product.name }}</a></h3><p>{{ row.product.brand }} &middot; {{ row.product.size }}</p><p class="{% if not row.available %}ps-unavailable{% else %}ps-muted{% endif %}">{{ row.availability }}</p><strong>{{ row.product.price|rupiah }}</strong></div>
+      <button type="submit" form="ps-remove-{{ row.product.pk }}" class="ps-text-button">Hapus</button>
+    </article>{% endfor %}</section>
+  {% empty %}<div class="ps-empty"><h2>Keranjang masih kosong</h2><p>Temukan pakaian preloved untuk kamu pakai lagi.</p><a class="btn-primary" href="{% url 'product_catalog:katalog' %}">Jelajahi katalog</a></div>{% endfor %}
+    {% if groups %}<div class="ps-checkout-bar"><span data-selection-count>{{ cart_purchasable_count }} barang dipilih</span><button class="btn-primary" type="submit" data-selection-submit {% if not cart_purchasable_count %}disabled{% endif %}>Lanjut checkout &rarr;</button></div>{% endif %}
+  </form>
+  {% for group in groups %}{% for row in group.rows %}<form id="ps-remove-{{ row.product.pk }}" data-cart-remove action="{% url 'pesanan:cart_remove_page' %}" method="post">{% csrf_token %}<input type="hidden" name="product_id" value="{{ row.product.pk }}"></form>{% endfor %}{% endfor %}
+</section>

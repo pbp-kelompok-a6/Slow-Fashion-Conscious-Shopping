@@ -8,15 +8,16 @@ register = template.Library()
 
 
 def format_rupiah(value):
-    """Ubah angka menjadi format Rp85.000 (tanpa desimal, titik ribuan)."""
+    """Rupiah with fractional prices preserved, e.g. Rp85.000,25."""
     if value is None or value == "":
         return ""
     try:
-        amount = Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+        amount = Decimal(str(value)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
     except (InvalidOperation, ValueError, TypeError):
         return value
     sign = "-" if amount < 0 else ""
-    return f"{sign}Rp{abs(int(amount)):,}".replace(",", ".")
+    whole, fraction = f"{abs(amount):,.2f}".split(".")
+    return f"{sign}Rp{whole.replace(',', '.')}" + (f",{fraction}" if fraction != "00" else "")
 
 
 @register.filter

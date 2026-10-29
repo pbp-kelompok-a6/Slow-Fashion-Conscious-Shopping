@@ -1,0 +1,7 @@
+{% load format_tags %}
+<section class="ps-page" data-ps-page="success">
+  <header class="ps-success-heading"><p class="ps-eyebrow">Terima kasih sudah memberi kesempatan kedua</p><h1>Checkout tercatat</h1><p>{{ orders|length }} pesanan dibuat, satu untuk setiap toko.</p><strong>{{ total|rupiah }}</strong></header>
+  <p class="ps-notice">Seluruh transaksi ini simulasi. COD tetap belum dibayar sampai pesanan selesai.</p>
+  <div class="ps-stack">{% for order in orders %}{% include "pesanan/partials/order_card.html" %}{% endfor %}</div>
+  <div class="ps-actions"><a href="{% url 'pesanan:purchases_page' %}" class="btn-primary">Pesanan saya</a><a href="{% url 'product_catalog:katalog' %}" class="btn-outline">Lanjut belanja</a></div>
+</section>

@@ -1,0 +1,9 @@
+{% load format_tags %}
+<article class="ps-panel ps-order-card">
+  <header class="ps-heading"><h2><a href="{% url 'pesanan:order_page' order.pk %}">Pesanan #{{ order.pk }}</a></h2><span class="ps-status ps-status-{{ order.status }}">{{ order.get_status_display }}</span></header>
+  <p class="ps-muted">{% if incoming %}Pembeli: {{ order.buyer.username }}{% else %}Toko: {{ order.seller.username }}{% endif %} &middot; {{ order.created_at|date:"j M Y, H:i" }}</p>
+  {% for item in order.items.all %}<div class="ps-summary-item"><span>{{ item.product_name }}</span><span>{{ item.price|rupiah }}</span></div>{% endfor %}
+  <div class="ps-summary-item"><strong>Total termasuk ongkir</strong><strong>{{ order.total|rupiah }}</strong></div>
+  <p class="ps-muted">{{ order.get_payment_method_display }} &middot; {{ order.get_payment_status_display }}</p>
+  <a class="ps-detail-link" href="{% url 'pesanan:order_page' order.pk %}">Lihat detail &rarr;</a>
+</article>
