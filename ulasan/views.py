@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from listing.models import Product
+from profil_toko.models import Store
 from .forms import ReviewForm
 from .models import Review
 
@@ -14,8 +15,14 @@ def product_reviews(request, product_id):
 
 def show_json(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
-    reviews = Review.objects.filter(product=product)
+    return reviews_json_response(request, Review.objects.filter(product=product))
 
+def show_store_json(request, username):
+    store = get_object_or_404(Store, owner__username=username)
+    return reviews_json_response(request, Review.objects.filter(seller=store.owner))
+
+def reviews_json_response(request, reviews):
+    """Dipakai bersama oleh JSON ulasan produk dan JSON ulasan toko."""
     # Filter data: urutkan berdasarkan terbaru (default) atau rating tertinggi
     sort = request.GET.get("sort", "terbaru")
     if sort == "rating":
@@ -46,7 +53,6 @@ def show_json(request, product_id):
     rata_rata = round(sum(r["rating"] for r in data) / jumlah, 1) if jumlah > 0 else 0
 
     return JsonResponse({
-        "product_id": product.pk,
         "sort": sort,
         "jumlah": jumlah,
         "rata_rata": rata_rata,
@@ -69,12 +75,32 @@ def create_review(request, product_id):
     if Review.objects.filter(product=product, user=request.user).exists():
         return JsonResponse({"message": "Kamu sudah mengulas produk ini."}, status=400)
 
+    return save_new_review(request, product=product)
+
+@require_POST
+def create_store_review(request, username):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Kamu harus login untuk menulis ulasan."}, status=403)
+
+    store = get_object_or_404(Store, owner__username=username)
+
+    if store.owner_id == request.user.id:
+        return JsonResponse({"message": "Kamu tidak bisa mengulas tokomu sendiri."}, status=403)
+
+    if Review.objects.filter(seller=store.owner, user=request.user).exists():
+        return JsonResponse({"message": "Kamu sudah mengulas toko ini."}, status=400)
+
+    return save_new_review(request, seller=store.owner)
+
+def save_new_review(request, product=None, seller=None):
+    """Validasi form lalu simpan ulasan baru untuk produk ATAU toko (salah satu diisi)."""
     form = ReviewForm(request.POST)
     if form.is_valid():
-        # commit=False: objek dibuat tapi belum disimpan, karena product dan user
+        # commit=False: objek dibuat tapi belum disimpan, karena target ulasan dan user
         # tidak ada di form dan harus diisi dulu dari view
         review = form.save(commit=False)
         review.product = product
+        review.seller = seller
         review.user = request.user
         review.save()
         return JsonResponse({"message": "Ulasan berhasil dikirim. Terima kasih!"}, status=201)

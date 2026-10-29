@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from listing.models import Product
+from profil_toko.models import Store
 from .forms import ReviewForm
 from .models import Review
 
@@ -333,3 +334,167 @@ class DeleteReviewTest(ReviewTestBase):
         self.client.force_login(self.buyer)
         response = self.client.post(reverse("ulasan:delete_review", args=[uuid.uuid4()]))
         self.assertEqual(response.status_code, 404)
+
+
+class StoreReviewTestBase(ReviewTestBase):
+    """Sama seperti ReviewTestBase, ditambah toko milik seller."""
+
+    def setUp(self):
+        super().setUp()
+        self.store = Store.objects.create(
+            owner=self.seller,
+            name="Toko Seller",
+            city="Depok",
+            whatsapp_number="081234567890",
+        )
+
+    def create_store_review(self, user, rating=4, komentar="Seller ramah"):
+        return Review.objects.create(seller=self.seller, user=user, rating=rating, komentar=komentar)
+
+
+class StoreReviewModelTest(StoreReviewTestBase):
+    def test_str(self):
+        review = self.create_store_review(self.buyer, rating=5)
+        self.assertEqual(str(review), "buyer - toko seller (5)")
+
+    def test_one_review_per_user_per_store(self):
+        self.create_store_review(self.buyer)
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                self.create_store_review(self.buyer)
+
+    def test_product_and_store_review_by_same_user_allowed(self):
+        self.create_review(self.buyer)
+        self.create_store_review(self.buyer)
+        self.assertEqual(Review.objects.filter(user=self.buyer).count(), 2)
+
+    def test_store_review_survives_closing_store(self):
+        self.create_store_review(self.buyer)
+        self.store.delete()
+        self.assertEqual(Review.objects.filter(seller=self.seller).count(), 1)
+
+
+class ShowStoreJsonTest(StoreReviewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("ulasan:show_store_json", args=[self.seller.username])
+
+    def test_only_store_reviews_listed(self):
+        self.create_store_review(self.buyer, rating=5, komentar="Ulasan toko")
+        self.create_review(self.other, rating=1, komentar="Ulasan produk")
+
+        data = self.client.get(self.url).json()
+        self.assertEqual(data["jumlah"], 1)
+        self.assertEqual(data["reviews"][0]["komentar"], "Ulasan toko")
+
+    def test_sort_rating(self):
+        old = self.create_store_review(self.buyer, rating=5)
+        Review.objects.filter(pk=old.pk).update(created_at=old.created_at - timedelta(days=1))
+        self.create_store_review(self.other, rating=2)
+
+        data = self.client.get(self.url, {"sort": "rating"}).json()
+        self.assertEqual([r["username"] for r in data["reviews"]], ["buyer", "other"])
+
+    def test_owner_gets_edit_url(self):
+        review = self.create_store_review(self.buyer)
+        self.client.force_login(self.buyer)
+        data = self.client.get(self.url).json()
+        self.assertEqual(data["reviews"][0]["edit_url"], reverse("ulasan:edit_review", args=[review.id]))
+
+    def test_store_not_found(self):
+        response = self.client.get(reverse("ulasan:show_store_json", args=[self.buyer.username]))
+        self.assertEqual(response.status_code, 404)
+
+
+class CreateStoreReviewTest(StoreReviewTestBase):
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("ulasan:create_store_review", args=[self.seller.username])
+        self.valid_data = {"rating": 5, "komentar": "Pengiriman cepat"}
+
+    def test_guest_forbidden(self):
+        response = self.client.post(self.url, self.valid_data)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Review.objects.count(), 0)
+
+    def test_owner_cannot_review_own_store(self):
+        self.client.force_login(self.seller)
+        response = self.client.post(self.url, self.valid_data)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Review.objects.count(), 0)
+
+    def test_create_success(self):
+        self.client.force_login(self.buyer)
+        response = self.client.post(self.url, self.valid_data)
+        self.assertEqual(response.status_code, 201)
+
+        review = Review.objects.get()
+        self.assertEqual(review.seller, self.seller)
+        self.assertIsNone(review.product)
+        self.assertEqual(review.user, self.buyer)
+
+    def test_cannot_review_store_twice(self):
+        self.create_store_review(self.buyer)
+        self.client.force_login(self.buyer)
+        response = self.client.post(self.url, self.valid_data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["message"], "Kamu sudah mengulas toko ini.")
+
+    def test_invalid_data(self):
+        self.client.force_login(self.buyer)
+        response = self.client.post(self.url, {"rating": "", "komentar": ""})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("rating", response.json()["errors"])
+
+    def test_store_not_found(self):
+        self.client.force_login(self.buyer)
+        response = self.client.post(reverse("ulasan:create_store_review", args=[self.other.username]), self.valid_data)
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_not_allowed(self):
+        self.client.force_login(self.buyer)
+        self.assertEqual(self.client.get(self.url).status_code, 405)
+
+    def test_edit_and_delete_store_review(self):
+        review = self.create_store_review(self.buyer, rating=3)
+        self.client.force_login(self.buyer)
+
+        response = self.client.post(reverse("ulasan:edit_review", args=[review.id]), {"rating": 4, "komentar": "Diubah"})
+        self.assertEqual(response.status_code, 200)
+        review.refresh_from_db()
+        self.assertEqual(review.rating, 4)
+        self.assertEqual(review.seller, self.seller)
+
+        response = self.client.post(reverse("ulasan:delete_review", args=[review.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Review.objects.count(), 0)
+
+
+class StoreDetailIntegrationTest(StoreReviewTestBase):
+    """Slot ulasan toko harus muncul di halaman Profil Toko milik modul profil_toko."""
+
+    def setUp(self):
+        super().setUp()
+        # Toko dibuat tanpa produk: kartu produk di halaman toko memakai
+        # partials/product_card.html (template bersama) yang bukan bagian modul ulasan.
+        self.product.delete()
+        self.url = reverse("profil_toko:detail", args=[self.seller.username])
+
+    def test_store_page_includes_review_slot(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "ulasan/slots/store_reviews.html")
+        self.assertContains(response, "Ulasan Toko")
+        self.assertContains(response, reverse("ulasan:show_store_json", args=[self.seller.username]))
+
+    def test_buyer_sees_form(self):
+        self.client.force_login(self.buyer)
+        response = self.client.get(self.url)
+        self.assertContains(response, 'id="review-form"')
+        self.assertContains(response, reverse("ulasan:create_store_review", args=[self.seller.username]))
+
+    def test_owner_does_not_see_form(self):
+        self.client.force_login(self.seller)
+        response = self.client.get(self.url)
+        self.assertContains(response, "Ini tokomu sendiri")
+        self.assertNotContains(response, 'id="review-form"')
