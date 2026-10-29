@@ -81,6 +81,15 @@
   color: var(--black);
 }
 
+.review-action.is-danger {
+  color: #B33A3A;
+}
+
+.review-action:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
 .review-edit-form {
   border: none;
   padding: 0;

@@ -100,6 +100,7 @@
         ${review.is_owner ? `
           <div class="review-actions">
             <button type="button" class="review-action" data-action="edit">Edit</button>
+            <button type="button" class="review-action is-danger" data-action="delete">Hapus</button>
           </div>` : ""}
       </article>
     `;
@@ -225,7 +226,7 @@
   // di #review-list (event delegation), bukan di setiap tombol.
   const reviewList = document.getElementById("review-list");
 
-  reviewList.addEventListener("click", (event) => {
+  reviewList.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const article = button.closest(".review-item");
@@ -235,8 +236,36 @@
       article.innerHTML = renderEditForm(review);
     } else if (button.dataset.action === "cancel") {
       article.outerHTML = renderReview(review);
+    } else if (button.dataset.action === "delete") {
+      await deleteReview(review, button);
     }
   });
+
+  // Hapus ulasan via AJAX
+  async function deleteReview(review, button) {
+    if (!confirm("Yakin ingin menghapus ulasan ini?")) return;
+    button.disabled = true;
+
+    try {
+      const response = await fetch(review.delete_url, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        // Daftar dimuat ulang: ulasan hilang, ringkasan rating diperbarui,
+        // dan form tambah ulasan muncul lagi
+        loadReviews();
+      } else {
+        alert(result.message || "Ulasan gagal dihapus. Coba lagi.");
+        button.disabled = false;
+      }
+    } catch (error) {
+      alert("Tidak dapat terhubung ke server. Coba lagi.");
+      button.disabled = false;
+    }
+  }
 
   reviewList.addEventListener("submit", async (event) => {
     const form = event.target.closest(".review-edit-form");

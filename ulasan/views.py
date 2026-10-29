@@ -37,8 +37,9 @@ def show_json(request, product_id):
             "created_at": review.created_at.strftime("%d %b %Y"),
             "is_edited": (review.updated_at - review.created_at).total_seconds() > 1,
             "is_owner": is_owner,
-            # URL edit hanya dikirim ke pemilik ulasan
+            # URL edit dan hapus hanya dikirim ke pemilik ulasan
             "edit_url": reverse("ulasan:edit_review", args=[review.id]) if is_owner else None,
+            "delete_url": reverse("ulasan:delete_review", args=[review.id]) if is_owner else None,
         })
 
     jumlah = len(data)
@@ -104,3 +105,17 @@ def edit_review(request, review_id):
         "message": "Ulasan gagal diperbarui. Periksa kembali isian kamu.",
         "errors": form.errors.get_json_data(),
     }, status=400)
+
+@require_POST
+def delete_review(request, review_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Kamu harus login untuk menghapus ulasan."}, status=403)
+
+    review = get_object_or_404(Review, pk=review_id)
+
+    # Filter autentikasi: hanya penulis ulasan yang boleh menghapus
+    if review.user_id != request.user.id:
+        return JsonResponse({"message": "Kamu hanya bisa menghapus ulasanmu sendiri."}, status=403)
+
+    review.delete()
+    return JsonResponse({"message": "Ulasan berhasil dihapus."})
