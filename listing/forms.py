@@ -39,8 +39,8 @@ class ProductForm(forms.ModelForm):
             }),
             "condition": forms.Select(),
             "price": forms.NumberInput(attrs={
-                "min": "1",
-                "step": "1",
+                "min": "0.01",
+                "step": "0.01",
                 "placeholder": "Contoh: 85000",
             }),
         }
@@ -59,9 +59,6 @@ class ProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["category"].choices = [("", "Pilih kategori")] + Product.CATEGORY_CHOICES
         self.fields["condition"].choices = [("", "Pilih kondisi")] + Product.CONDITION_CHOICES
-        # Harga rupiah ditampilkan tanpa desimal (85000, bukan 85000.00).
-        if self.instance.pk and not self.is_bound:
-            self.initial["price"] = int(self.instance.price)
 
     def clean_price(self):
         price = self.cleaned_data["price"]

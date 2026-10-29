@@ -45,11 +45,12 @@ def catalog_context(request):
         "active_chips": chips,
         "querystring": query_without_page(request.GET),
         "clear_url": "?sort=" + filters["sort"],
+        "price_error": "Harga minimum tidak boleh melebihi harga maksimum." if filters["min_price"] is not None and filters["max_price"] is not None and filters["min_price"] > filters["max_price"] else "",
     }
 
 
 def katalog(request):
-    return render(request, "katalog.html", catalog_context(request))
+    return render(request, "product_catalog/katalog.html", catalog_context(request))
 
 
 @require_GET
@@ -58,7 +59,7 @@ def katalog_json(request):
     filters = context["filters"]
     page_obj = context["page_obj"]
     return JsonResponse({
-        "html": page_html(request, "katalog.html", context, "product_catalog:katalog"),
+        "html": page_html(request, "product_catalog/katalog.html", context, "product_catalog:katalog"),
         "success": True,
         "message": "OK",
         "count": page_obj.paginator.count,
@@ -66,10 +67,11 @@ def katalog_json(request):
         "num_pages": page_obj.paginator.num_pages,
         "filters": {
             **filters,
-            "min_price": int(filters["min_price"]) if filters["min_price"] is not None else None,
-            "max_price": int(filters["max_price"]) if filters["max_price"] is not None else None,
+            "min_price": str(filters["min_price"]) if filters["min_price"] is not None else None,
+            "max_price": str(filters["max_price"]) if filters["max_price"] is not None else None,
         },
         "products": [product_card_data(p) for p in page_obj.object_list],
+        "price_error": context["price_error"],
     })
 
 # ---------- Wishlist ----------
@@ -90,7 +92,7 @@ def item_data(item):
 def wishlist_context(request, invalid_item=None, invalid_form=None):
     items = (
         WishlistItem.objects.filter(user=request.user)
-        .select_related("product", "product__seller")
+        .select_related("product", "product__seller__profile")
         .prefetch_related("product__images")
     )
     total = items.count()
@@ -111,7 +113,7 @@ def wishlist_context(request, invalid_item=None, invalid_form=None):
 
 @login_required
 def wishlist(request, invalid_item=None, invalid_form=None, status=200):
-    return render(request, "wishlist.html", wishlist_context(request, invalid_item, invalid_form), status=status)
+    return render(request, "product_catalog/wishlist.html", wishlist_context(request, invalid_item, invalid_form), status=status)
 
 
 def wants_json(request):
@@ -181,15 +183,14 @@ def remove_item(request, item_id):
 @require_GET
 def wishlist_json(request):
     context = wishlist_context(request)
-    items = (
-        WishlistItem.objects.filter(user=request.user)
-        .select_related("product", "product__seller")
-        .prefetch_related("product__images")
-    )
+    items = context["items"]
     return JsonResponse({
         "success": True,
         "message": "OK",
-        "count": len(items),
-        "html": page_html(request, "wishlist.html", context, "product_catalog:wishlist"),
+        "count": context["total"],  # Backwards-compatible global count.
+        "total_count": context["total"],
+        "filtered_count": len(items),
+        "wishlist_product_ids": list(WishlistItem.objects.filter(user=request.user).values_list("product_id", flat=True)),
+        "html": page_html(request, "product_catalog/wishlist.html", context, "product_catalog:wishlist"),
         "items": [item_data(item) for item in items],
     })

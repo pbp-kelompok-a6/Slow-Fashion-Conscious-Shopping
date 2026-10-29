@@ -86,6 +86,16 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def is_available(self):
+        return self.status == "active" and getattr(getattr(self.seller, "profile", None), "is_seller", False)
+
+    @property
+    def availability_display(self):
+        if self.status == "sold":
+            return "Terjual"
+        return "Tersedia" if self.is_available else "Tidak tersedia (seller nonaktif)"
+
 
 class ProductImage(models.Model):
 

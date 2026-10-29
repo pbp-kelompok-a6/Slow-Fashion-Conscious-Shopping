@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LaPAKAIAN</title>
+  <title>{% block title %}LaPAKAIAN{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'global/style.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'product_catalog/product_catalog.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -15,24 +16,27 @@
   <a href="{% url 'landing' %}" class="logo">LaPAKAIAN</a>
   <div class="nav-links">
     <a href="{% url 'product_catalog:katalog' %}">Katalog</a>
-    <a href="#">Kategori</a>
+    <details class="nav-categories"><summary>Kategori</summary>{% load format_tags %}{% product_categories as nav_categories %}<div>{% for value, label in nav_categories %}<a href="{% url 'product_catalog:katalog' %}?category={{ value }}">{{ label }}</a>{% endfor %}</div></details>
     {% if user.is_authenticated %}
       <a href="{% url 'product_catalog:wishlist' %}">Wishlist</a>
-      {% if user.profile.is_seller %}
-        <a href="{% url 'listing:my_listings' %}">My Listings</a>
-        <a href="#">Toko Saya</a>
-      {% endif %}
+      <a href="{% url 'listing:my_listings' %}" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>My Listings</a>
+      <a href="{% url 'profil_toko:toko_saya' %}" data-seller-nav {% if not user.profile.is_seller %}hidden{% endif %}>Toko Saya</a>
       <a href="{% url 'akun:profil' %}">{{ user.username }}</a>
-      <a href="{% url 'akun:logout' %}">Keluar</a>
+      <form method="post" action="{% url 'akun:logout' %}" class="nav-logout">{% csrf_token %}<button type="submit" class="link-btn">Keluar</button></form>
     {% else %}
       <a href="{% url 'akun:login' %}">Masuk</a>
       <a href="{% url 'akun:register' %}">Daftar</a>
     {% endif %}
   </div>
 </nav>
+  {% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
   <main>
     {% block content %}{% endblock %}
   </main>
+  <footer>LaPAKAIAN &middot; Pakai lagi, kurangi limbah. <a href="{% url 'product_catalog:katalog' %}">Katalog</a></footer>
+  <script src="{% static 'js/utils.js' %}"></script>
+  <template id="wishlist-form-template"><form data-wishlist-toggle method="post">{% csrf_token %}<input type="hidden" name="next"><input type="hidden" name="in_wishlist"><button class="pc-heart" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button></form></template>
+  {% load wishlist_tags %}{% wishlist_js %}
   {% block extra_js %}{% endblock %}
 </body>
 </html>

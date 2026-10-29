@@ -28,6 +28,7 @@ urlpatterns = [
     path("akun/", include("akun.urls")),
     path("listing/", include("listing.urls")),
     path("", include("product_catalog.urls")),
+    path("toko/", include("profil_toko.urls")),
 ]
 
 

@@ -59,6 +59,9 @@ def wishlist_js(context):
     # Data untuk kartu yang dibangun JS (renderProductCard): state awal + URL toggle.
     data = json.dumps({
         "ids": sorted(wishlist_ids(request)),
+        "authenticated": bool(request and request.user.is_authenticated),
+        "json_url": reverse("product_catalog:wishlist_json"),
+        "login_url": reverse("akun:login"),
         "toggle_url": reverse("product_catalog:toggle_wishlist", args=[0]),
     }).replace("<", "\\u003c")
     return format_html(

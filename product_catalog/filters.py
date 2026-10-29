@@ -94,7 +94,7 @@ def _iexact_any(field, values):
 
 
 def filter_products(filters):
-    products = Product.objects.public().select_related("seller").prefetch_related("images")
+    products = Product.objects.public().select_related("seller__profile").prefetch_related("images")
     if filters["q"]:
         products = products.filter(Q(name__icontains=filters["q"]) | Q(brand__icontains=filters["q"]))
     if filters["category"]:

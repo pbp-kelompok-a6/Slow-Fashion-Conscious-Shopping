@@ -29,7 +29,11 @@ def seller_required(view_func):
                 "Kamu harus memiliki profil seller untuk mengakses halaman ini."
             )
 
-        if not profile.is_seller:
+        managing_own = view_func.__name__ in {
+            "my_listings", "my_products_json", "product_edit", "product_delete",
+            "product_mark_sold", "product_mark_active",
+        } and Product.objects.filter(seller=request.user).exists()
+        if not profile.is_seller and not managing_own:
             return HttpResponseForbidden(
                 "Halaman ini hanya bisa diakses oleh seller."
             )
@@ -61,7 +65,7 @@ def product_detail_data(product):
             {"url": image.image.url, "alt_text": image.alt_text}
             for image in product.images.all()
         ],
-        "store_url": reverse("profil_toko:detail", args=[product.seller.username]),
+        "store_url": reverse("profil_toko:detail", args=[product.seller.username]) if hasattr(product.seller, "store") else None,
         "updated_at": product.updated_at.isoformat(),
     })
     return data
@@ -155,7 +159,7 @@ def product_detail(request, pk):
     rendered for the seller who owns the product.
     """
     product = get_object_or_404(
-        Product.objects.select_related("seller").prefetch_related("images"),
+        Product.objects.select_related("seller__profile").prefetch_related("images"),
         pk=pk,
     )
     is_owner = request.user.is_authenticated and product.seller_id == request.user.pk
@@ -291,7 +295,7 @@ def product_list_json(request):
     """Produk aktif publik (seller aktif). Filter opsional: category, seller."""
     products = (
         Product.objects.public()
-        .select_related("seller")
+        .select_related("seller__profile")
         .prefetch_related("images")
     )
     category = request.GET.get("category")
@@ -313,7 +317,7 @@ def product_list_json(request):
 @require_GET
 def product_detail_json(request, pk):
     product = get_object_or_404(
-        Product.objects.select_related("seller").prefetch_related("images"),
+        Product.objects.select_related("seller__profile").prefetch_related("images"),
         pk=pk,
     )
     return JsonResponse({
@@ -328,7 +332,7 @@ def product_detail_json(request, pk):
 def my_products_json(request):
     products = (
         Product.objects.filter(seller=request.user)
-        .select_related("seller")
+        .select_related("seller__profile")
         .prefetch_related("images")
     )
     status = request.GET.get("status")

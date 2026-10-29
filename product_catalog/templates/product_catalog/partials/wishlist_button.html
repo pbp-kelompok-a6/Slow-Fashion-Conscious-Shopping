@@ -1,0 +1,9 @@
+{% if is_authenticated %}
+{% if in_wishlist or product.is_available %}
+<form data-wishlist-toggle data-product-id="{{ product.pk }}" method="post" action="{% url 'product_catalog:toggle_wishlist' product.pk %}">
+  {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+  <input type="hidden" name="in_wishlist" value="{% if in_wishlist %}false{% else %}true{% endif %}">
+  <button class="pc-heart{% if in_wishlist %} pc-saved{% endif %}" type="submit" aria-pressed="{% if in_wishlist %}true{% else %}false{% endif %}" aria-label="{% if in_wishlist %}Hapus dari wishlist{% else %}Simpan ke wishlist{% endif %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></button>
+</form>
+{% endif %}
+{% elif product.is_available %}<a class="pc-heart" href="{% url 'akun:login' %}?next={{ request.get_full_path|urlencode }}" aria-label="Masuk untuk menyimpan ke wishlist">&#9825;</a>{% endif %}

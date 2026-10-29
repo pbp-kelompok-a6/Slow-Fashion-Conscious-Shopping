@@ -1,0 +1,9 @@
+{% load format_tags wishlist_tags %}
+<article class="product-card{% if not product.is_available %} is-sold{% endif %}" data-product-id="{{ product.pk }}">
+  <div class="product-media">
+    <a class="product-image" href="{% url 'listing:product_detail' product.pk %}" aria-label="{{ product.name }}">{% with image=product.images.all|first %}{% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy">{% else %}<span class="img-placeholder">Belum ada foto</span>{% endif %}{% endwith %}</a>
+    {% if not product.is_available %}<span class="badge badge-sold product-flag">{{ product.availability_display }}</span>{% endif %}
+    {% wishlist_button product %}
+  </div>
+  <div class="product-info"><a class="product-name" href="{% url 'listing:product_detail' product.pk %}">{{ product.name }}</a><div class="price">{{ product.price|rupiah }}</div><p class="meta">{{ product.brand }} &middot; {{ product.size }} &middot; {{ product.get_condition_display }}</p></div>
+</article>

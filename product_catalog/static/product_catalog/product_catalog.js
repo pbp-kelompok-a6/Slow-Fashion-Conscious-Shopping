@@ -3,7 +3,7 @@
   'use strict';
   if (!window.fetch || !window.DOMParser || !window.AbortController) return;
   const page = () => document.querySelector('.pc-page[data-json-url]');
-  if (!page() || document.documentElement.dataset.pcAjax) return;
+  if (document.documentElement.dataset.pcAjax) return;
   document.documentElement.dataset.pcAjax = 'true';
   const writes = new Set();
   const locks = new Set();
@@ -87,13 +87,16 @@
   }
 
   function setHearts(id, active) {
-    page()?.querySelectorAll('[data-product-id]').forEach(card => {
+    if (active) initialIds.add(String(id)); else initialIds.delete(String(id));
+    document.querySelectorAll('[data-product-id]').forEach(card => {
       if (String(card.dataset.productId) !== String(id)) return;
       const heart = card.querySelector('button.pc-heart');
       if (!heart) return;
       heart.classList.toggle('pc-saved', active);
       heart.setAttribute('aria-pressed', String(active));
       heart.setAttribute('aria-label', active ? 'Hapus dari wishlist' : 'Simpan ke wishlist');
+      const desired = heart.form?.elements.in_wishlist;
+      if (desired) desired.value = String(!active);
     });
   }
 
@@ -101,7 +104,15 @@
     const current = page();
     if (!current?.classList.contains('pc-wishlist')) return;
     current.querySelectorAll('[data-product-id]').forEach(card => {
-      if (String(card.dataset.productId) === String(id)) card.remove();
+      if (String(card.dataset.productId) === String(id)) {
+        const hadFocus = card.contains(document.activeElement);
+        const next = card.nextElementSibling || card.previousElementSibling;
+        card.remove();
+        if (hadFocus) {
+          const target = next?.querySelector('a, button') || current.querySelector('h1');
+          if (target) { target.tabIndex = target.matches('h1') ? -1 : target.tabIndex; target.focus(); }
+        }
+      }
     });
     current.querySelector('[data-wishlist-count]').textContent = `${count} barang tersimpan`;
     const grid = current.querySelector('.pc-wishlist-grid');
@@ -113,10 +124,10 @@
   }
 
   async function reconcile() {
-    const current = page();
-    const result = await json(current.dataset.wishlistJson);
-    const ids = new Set(result.items.map(item => String(item.product.id)));
-    current.querySelectorAll('[data-product-id]').forEach(card => {
+    const result = await json(config.json_url);
+    const ids = new Set(result.wishlist_product_ids.map(String));
+    initialIds.clear(); ids.forEach(id => initialIds.add(id));
+    document.querySelectorAll('[data-product-id]').forEach(card => {
       const id = card.dataset.productId;
       setHearts(id, ids.has(id));
       if (!ids.has(id)) removeCards(id, result.count);
@@ -155,6 +166,9 @@
       prepareNotes();
       if (focusName) {
         [...replacement.querySelectorAll('input, select')].find(input => input.name === focusName && input.value === focusValue)?.focus({preventScroll: true});
+      } else {
+        const heading = replacement.querySelector('h1');
+        heading?.setAttribute('tabindex', '-1'); heading?.focus({preventScroll: true});
       }
     } catch (error) {
       if (error.name !== 'AbortError' && ticket === sequence) {
@@ -212,7 +226,7 @@
 
   document.addEventListener('submit', event => {
     const form = event.target;
-    if (!page()?.contains(form)) return;
+    if (!(form instanceof HTMLFormElement)) return;
     if (form.id === 'katalog-filter') {
       event.preventDefault(); navigate(filterUrl(form));
     } else if (form.matches('[data-wishlist-toggle], .pc-note-form, .pc-remove-form')) {
@@ -238,6 +252,39 @@
     event.preventDefault(); navigate(url);
   });
   window.addEventListener('popstate', () => navigate(location.href, false));
-  window.addEventListener('pageshow', event => { if (event.persisted) navigate(location.href, false); });
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted) return;
+    if (page()) navigate(location.href, false);
+    else if (config.authenticated) reconcile().catch(error => feedback(error.message, true));
+  });
+  // Dynamic store cards use the same explicit-state form and delegated handler.
+  const config = JSON.parse(document.getElementById('wishlist-data')?.textContent || '{}');
+  const initialIds = new Set((config.ids || []).map(String));
+  document.addEventListener('lapakaian:card-rendered', event => {
+    const {card, product} = event.detail;
+    const active = initialIds.has(String(product.id));
+    if (!config.authenticated) {
+      if (!product.is_available) return;
+      const link = document.createElement('a');
+      link.className = 'pc-heart'; link.textContent = '\u2661';
+      link.href = config.login_url + '?next=' + encodeURIComponent(location.pathname + location.search);
+      link.setAttribute('aria-label', 'Masuk untuk menyimpan ke wishlist');
+      card.querySelector('.product-media').append(link);
+      return;
+    }
+    if (!active && !product.is_available) return;
+    const template = document.getElementById('wishlist-form-template');
+    if (!template) return;
+    const form = template.content.firstElementChild.cloneNode(true);
+    form.action = config.toggle_url.replace('/0/', '/' + product.id + '/');
+    form.dataset.productId = product.id;
+    form.elements.next.value = location.pathname + location.search;
+    form.elements.in_wishlist.value = String(!active);
+    const button = form.querySelector('button');
+    button.classList.toggle('pc-saved', active);
+    button.setAttribute('aria-pressed', String(active));
+    button.setAttribute('aria-label', active ? 'Hapus dari wishlist' : 'Simpan ke wishlist');
+    card.querySelector('.product-media').append(form);
+  });
   prepareNotes();
 })();

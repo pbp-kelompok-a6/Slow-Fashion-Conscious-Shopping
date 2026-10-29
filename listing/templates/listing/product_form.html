@@ -40,7 +40,7 @@
                         </label>
                         {% if image_form.instance.pk %}
                             <label class="photo-delete">
-                                <input type="checkbox" name="{{ image_form.DELETE.html_name }}"> Hapus
+                                {{ image_form.DELETE }} Hapus
                             </label>
                         {% else %}
                             <button type="button" class="link-btn photo-clear" hidden>Batal</button>
@@ -78,5 +78,6 @@
     </form>
 </section>
 {% endblock %}
+
 
 {% block extra_js %}<script src="{% static 'listing/listing.js' %}"></script>{% endblock %}

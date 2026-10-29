@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static format_tags %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/phase2.css' %}">{% endblock %}
+{% load static format_tags wishlist_tags %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/product_catalog.css' %}">{% endblock %}
 {% block content %}
 <section data-wishlist-json="{% url 'product_catalog:wishlist_json' %}" data-json-url="{% url 'product_catalog:katalog_json' %}" class="pc-page pc-catalog">
   <header class="pc-heading">
@@ -69,6 +69,7 @@
       </aside>
     </form>
     <div class="pc-results">
+        {% if price_error %}<p class="errorlist" role="alert">{{ price_error }}</p>{% endif %}
         {% if active_chips %}
           <div class="pc-chips pc-active-filters" aria-label="Filter aktif">
             {% for chip in active_chips %}
@@ -82,22 +83,14 @@
           {% for product in products %}
             <article data-product-id="{{ product.pk }}" class="pc-card">
               <div class="pc-media">
+                <a class="pc-image-link" href="{% url 'listing:product_detail' product.pk %}">
                 {% with image=product.images.all|first %}
                   {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy">{% else %}<span class="pc-no-image">Belum ada foto</span>{% endif %}
                 {% endwith %}
-                {% if user.is_authenticated %}
-                  <form data-wishlist-toggle method="post" action="{% url 'product_catalog:toggle_wishlist' product.pk %}">
-                    {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <button class="pc-heart {% if product.pk in wishlist_product_ids %}pc-saved{% endif %}" type="submit" aria-label="{% if product.pk in wishlist_product_ids %}Hapus dari wishlist{% else %}Simpan ke wishlist{% endif %}" aria-pressed="{% if product.pk in wishlist_product_ids %}true{% else %}false{% endif %}">
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
-                    </button>
-                  </form>
-                {% else %}
-                  <a class="pc-heart" href="{% url 'akun:login' %}?next={{ request.get_full_path|urlencode }}" aria-label="Masuk untuk menyimpan ke wishlist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></a>
-                {% endif %}
+                </a>{% wishlist_button product %}
               </div>
               <div class="pc-card-info">
-                <h2>{{ product.name }}</h2><p class="pc-price">{{ product.price|rupiah }}</p>
+                <h2><a href="{% url 'listing:product_detail' product.pk %}">{{ product.name }}</a></h2><p class="pc-price">{{ product.price|rupiah }}</p>
                 <p class="pc-meta">{% if product.brand %}{{ product.brand }} &middot; {% endif %}{{ product.size }} &middot; {{ product.get_condition_display }}</p>
                 <p class="pc-meta">{{ product.get_category_display }} &middot; {{ product.seller.username }}</p>
               </div>
@@ -137,4 +130,3 @@
   </div>
 </section>
 {% endblock %}
-{% block extra_js %}<script src="{% static 'product_catalog/phase3.js' %}" defer></script>{% endblock %}
