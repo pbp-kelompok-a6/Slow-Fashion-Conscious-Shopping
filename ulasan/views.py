@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from listing.models import Product
@@ -27,6 +28,7 @@ def show_json(request, product_id):
     # username penulis dan is_owner untuk pengguna yang sedang login
     data = []
     for review in reviews:
+        is_owner = request.user.is_authenticated and review.user_id == request.user.id
         data.append({
             "id": str(review.id),
             "username": review.user.username,
@@ -34,7 +36,9 @@ def show_json(request, product_id):
             "komentar": review.komentar,
             "created_at": review.created_at.strftime("%d %b %Y"),
             "is_edited": (review.updated_at - review.created_at).total_seconds() > 1,
-            "is_owner": request.user.is_authenticated and review.user_id == request.user.id,
+            "is_owner": is_owner,
+            # URL edit hanya dikirim ke pemilik ulasan
+            "edit_url": reverse("ulasan:edit_review", args=[review.id]) if is_owner else None,
         })
 
     jumlah = len(data)
@@ -76,5 +80,27 @@ def create_review(request, product_id):
 
     return JsonResponse({
         "message": "Ulasan gagal dikirim. Periksa kembali isian kamu.",
+        "errors": form.errors.get_json_data(),
+    }, status=400)
+
+@require_POST
+def edit_review(request, review_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Kamu harus login untuk mengedit ulasan."}, status=403)
+
+    review = get_object_or_404(Review, pk=review_id)
+
+    # Filter autentikasi: hanya penulis ulasan yang boleh mengedit
+    if review.user_id != request.user.id:
+        return JsonResponse({"message": "Kamu hanya bisa mengedit ulasanmu sendiri."}, status=403)
+
+    # instance=review: form mengubah ulasan yang sudah ada, bukan membuat baru
+    form = ReviewForm(request.POST, instance=review)
+    if form.is_valid():
+        form.save()
+        return JsonResponse({"message": "Ulasan berhasil diperbarui."})
+
+    return JsonResponse({
+        "message": "Ulasan gagal diperbarui. Periksa kembali isian kamu.",
         "errors": form.errors.get_json_data(),
     }, status=400)
