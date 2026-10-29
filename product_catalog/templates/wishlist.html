@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static format_tags %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/phase2.css' %}">{% endblock %}
+{% block content %}
+<section data-wishlist-json="{% url 'product_catalog:wishlist_json' %}" data-json-url="{% url 'product_catalog:wishlist_json' %}" class="pc-page pc-wishlist">
+<header class="pc-heading"><h1>Wishlist</h1><span class="pc-muted" data-wishlist-count>{{ total }} barang tersimpan</span></header>
+<p class="pc-back"><a class="pc-text-link" href="{% url 'product_catalog:katalog' %}">Kembali ke katalog</a></p>
+<nav class="pc-chips pc-categories" aria-label="Filter kategori wishlist">
+  <a class="pc-chip{% if not selected_category %} pc-chip-active{% endif %}" href="{% url 'product_catalog:wishlist' %}" {% if not selected_category %}aria-current="true"{% endif %}>Semua</a>
+  {% for value, label in categories %}
+    <a class="pc-chip{% if selected_category == value %} pc-chip-active{% endif %}" href="?category={{ value|urlencode }}" {% if selected_category == value %}aria-current="true"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+<div class="pc-grid pc-wishlist-grid">
+{% for item, form in rows %}
+  <article data-product-id="{{ item.product_id }}" class="pc-card{% if item.product.status == 'sold' %} pc-sold{% endif %}">
+    <div class="pc-media">
+    {% with image=item.product.images.all|first %}
+      {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:item.product.name }}" loading="lazy">{% else %}<span class="pc-no-image">Belum ada foto</span>{% endif %}
+    {% endwith %}
+    {% if item.product.status == "sold" %}<span class="pc-badge">{{ item.product.get_status_display }}</span>{% endif %}</div>
+    <div class="pc-card-info"><h2>{{ item.product.name }}</h2>
+    <p class="pc-price">{{ item.product.price|rupiah }}</p>
+    <p class="pc-meta">{{ item.product.brand }} &middot; {{ item.product.size }}</p>
+    <p class="pc-meta">{{ item.product.get_category_display }} | {{ item.product.get_condition_display }} | {{ item.product.get_status_display }}</p>
+    <p class="pc-meta">Penjual: {{ item.product.seller.username }}</p>
+    </div><div class="pc-note">
+    <form class="pc-note-form" method="post" action="{% url 'product_catalog:update_note' item.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <p data-note-text hidden>{{ item.note|default:"Belum ada catatan." }}</p>
+      <div data-note-fields>{{ form.as_p }}</div>
+      <button class="pc-button pc-button-small" type="submit">Simpan catatan</button>
+    </form>
+    <form class="pc-remove-form" method="post" action="{% url 'product_catalog:remove_item' item.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button class="pc-remove" type="submit">Hapus dari wishlist</button>
+    </form>
+    </div>
+  </article>
+{% empty %}
+  <p class="pc-empty">{% if selected_category %}Belum ada barang di kategori ini.{% else %}Wishlist masih kosong. Simpan produk melalui katalog.{% endif %}</p>
+{% endfor %}
+</div>
+</section>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'product_catalog/phase3.js' %}" defer></script>{% endblock %}

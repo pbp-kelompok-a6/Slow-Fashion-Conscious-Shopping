@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "akun",
     "listing",
     "profil_toko",
+    "product_catalog", 
 ]
 
 MIDDLEWARE = [

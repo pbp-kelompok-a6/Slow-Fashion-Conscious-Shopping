@@ -21,13 +21,16 @@ from django.conf.urls.static import static
 
 from akun import views as akun_views
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", akun_views.landing, name="landing"),
     path("akun/", include("akun.urls")),
     path("listing/", include("listing.urls")),
     path("toko/", include("profil_toko.urls")),
+    path("", include("product_catalog.urls")),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(
