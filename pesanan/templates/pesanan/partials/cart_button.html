@@ -1,0 +1,10 @@
+<div class="cart-slot" data-cart-slot data-product-id="{{ product.pk }}" data-availability="{{ state }}" data-owner="{% if is_owner %}true{% else %}false{% endif %}">
+  {% if is_owner %}<span class="ps-muted">Listing milikmu</span>
+  {% elif state != "Tersedia" %}<span class="ps-unavailable" role="status">{{ state }}</span>{% if in_cart %} <a href="{% url 'pesanan:cart_page' %}">Lihat keranjang</a>{% endif %}
+  {% elif not user.is_authenticated %}<a class="btn-outline" href="{% url 'akun:login' %}?next={{ request.get_full_path|urlencode }}">Masuk untuk membeli</a>
+  {% elif in_cart %}<a class="btn-outline" data-in-cart href="{% url 'pesanan:cart_page' %}">Di keranjang</a>
+  {% else %}<form data-cart-add method="post" action="{% url 'pesanan:cart_add_page' %}">
+    {% csrf_token %}<input type="hidden" name="product_id" value="{{ product.pk }}"><input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit" class="btn-primary">Tambah ke keranjang</button>
+  </form>{% endif %}
+</div>

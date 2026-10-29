@@ -5,6 +5,7 @@
 
 <section class="section profil-page">
   <div class="page-head"><h1 class="profil-title">Profil Saya</h1></div>
+  {% if deletion_error %}<p role="alert">{{ deletion_error }}</p>{% endif %}
 
   <div class="profil-grid">
     <article class="profil-card">

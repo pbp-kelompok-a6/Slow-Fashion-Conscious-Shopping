@@ -1,0 +1,2 @@
+{% load format_tags %}
+<article class="product-card"><a class="product-image" href="{% url 'listing:product_detail' product.pk %}">{% with image=product.images.all|first %}{% if image %}<img src="{{ image.image.url }}" alt="{{ product.name }}" loading="lazy">{% else %}<span>Belum ada foto</span>{% endif %}{% endwith %}</a><div class="product-info"><a class="product-name" href="{% url 'listing:product_detail' product.pk %}">{{ product.name }}</a><p class="price">{{ product.price|rupiah }}</p><p class="meta">{{ product.brand }} &middot; {{ product.size }}</p></div></article>

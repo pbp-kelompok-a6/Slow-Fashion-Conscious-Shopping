@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static format_tags %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/phase2.css' %}">{% endblock %}
+{% load static format_tags pesanan_tags %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/product_catalog.css' %}">{% endblock %}
 {% block content %}
 <section data-wishlist-json="{% url 'product_catalog:wishlist_json' %}" data-json-url="{% url 'product_catalog:wishlist_json' %}" class="pc-page pc-wishlist">
 <header class="pc-heading"><h1>Wishlist</h1><span class="pc-muted" data-wishlist-count>{{ total }} barang tersimpan</span></header>
@@ -15,16 +15,18 @@
 {% for item, form in rows %}
   <article data-product-id="{{ item.product_id }}" class="pc-card{% if item.product.status == 'sold' %} pc-sold{% endif %}">
     <div class="pc-media">
+    <a href="{% url 'listing:product_detail' item.product_id %}" class="ps-wishlist-image">
     {% with image=item.product.images.all|first %}
       {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:item.product.name }}" loading="lazy">{% else %}<span class="pc-no-image">Belum ada foto</span>{% endif %}
-    {% endwith %}
+    {% endwith %}</a>
     {% if item.product.status == "sold" %}<span class="pc-badge">{{ item.product.get_status_display }}</span>{% endif %}</div>
-    <div class="pc-card-info"><h2>{{ item.product.name }}</h2>
+    <div class="pc-card-info"><h2><a href="{% url 'listing:product_detail' item.product_id %}">{{ item.product.name }}</a></h2>
     <p class="pc-price">{{ item.product.price|rupiah }}</p>
     <p class="pc-meta">{{ item.product.brand }} &middot; {{ item.product.size }}</p>
     <p class="pc-meta">{{ item.product.get_category_display }} | {{ item.product.get_condition_display }} | {{ item.product.get_status_display }}</p>
     <p class="pc-meta">Penjual: {{ item.product.seller.username }}</p>
     </div><div class="pc-note">
+    {% cart_button item.product %}
     <form class="pc-note-form" method="post" action="{% url 'product_catalog:update_note' item.pk %}">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.get_full_path }}">
@@ -45,4 +47,4 @@
 </div>
 </section>
 {% endblock %}
-{% block extra_js %}<script src="{% static 'product_catalog/phase3.js' %}" defer></script>{% endblock %}
+{% block extra_js %}<script src="{% static 'product_catalog/product_catalog.js' %}" defer></script>{% endblock %}

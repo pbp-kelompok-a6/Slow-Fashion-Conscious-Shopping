@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load static format_tags %}
+{% load static format_tags pesanan_tags %}
 {% block title %}{{ product.name }} · LaPAKAIAN{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'listing/listing.css' %}">{% endblock %}
 
 {% block content %}
 <section class="section product-detail" data-product-id="{{ product.pk }}">
-    <a href="" class="back-link">
+    <a href="{% if is_owner %}{% url 'listing:my_listings' %}{% else %}{% url 'product_catalog:katalog' %}{% endif %}" class="back-link">
         &larr; {% if is_owner %}Kembali ke My Listings{% else %}Kembali ke Katalog{% endif %}
     </a>
 
@@ -45,7 +45,7 @@
                 <span class="badge badge-sold" data-status-badge {% if product.status != "sold" %}hidden{% endif %}>Terjual</span>
             </div>
 
-            <div class="detail-actions">
+            <div class="detail-actions">{% cart_button product %}
             </div>
 
             {% if is_owner %}
@@ -74,24 +74,24 @@
             </div>
 
 
-            <a href="" class="store-link">
+            {% if product.seller.store %}<a href="{% url 'profil_toko:detail' product.seller.username %}" class="store-link">
                 <span class="avatar">{{ product.seller.store.name|default:product.seller.username|first }}</span>
                 <span class="store-link-text">
                     <strong>{{ product.seller.store.name|default:product.seller.username }}</strong>
                     <span class="meta">{{ product.seller.store.city|default:"Seller LaPAKAIAN" }}</span>
                 </span>
                 <span class="link-btn underline">Lihat Toko</span>
-            </a>
+            </a>{% else %}<p class="ps-muted">Seller belum membuka toko.</p>{% endif %}
         </div>
     </div>
 
 </section>
 
-{% if same_store %}
+{% if same_store and product.seller.store %}
 <section class="section">
     <div class="section-head">
         <h2>Dari toko yang sama</h2>
-        <a href="">Lihat Toko →</a>
+        <a href="{% url 'profil_toko:detail' product.seller.username %}">Lihat Toko →</a>
     </div>
     <div class="product-grid">
         {% for product in same_store %}

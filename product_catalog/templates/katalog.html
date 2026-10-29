@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static format_tags %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/phase2.css' %}">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/product_catalog.css' %}">{% endblock %}
 {% block content %}
 <section data-wishlist-json="{% url 'product_catalog:wishlist_json' %}" data-json-url="{% url 'product_catalog:katalog_json' %}" class="pc-page pc-catalog">
   <header class="pc-heading">
@@ -126,15 +126,15 @@
               {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-              <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">›</a>
+              <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}"></a>
             {% else %}
-              <span>›</span>
+              <span></span>
             {% endif %}
           </nav>
-          <p class="pc-page-info">Menampilkan {{ page_obj.start_index }}–{{ page_obj.end_index }} dari {{ page_obj.paginator.count }}</p>
+          <p class="pc-page-info">Menampilkan {{ page_obj.start_index }}-{{ page_obj.end_index }} dari {{ page_obj.paginator.count }}</p>
         {% endif %}
       </div>
   </div>
 </section>
 {% endblock %}
-{% block extra_js %}<script src="{% static 'product_catalog/phase3.js' %}" defer></script>{% endblock %}
+{% block extra_js %}<script src="{% static 'product_catalog/product_catalog.js' %}" defer></script>{% endblock %}

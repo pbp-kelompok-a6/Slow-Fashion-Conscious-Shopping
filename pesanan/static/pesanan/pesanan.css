@@ -1,0 +1,80 @@
+/* Checkout uses the existing cream/ink palette, typography and square borders. */
+[hidden] { display: none !important; }
+.nav-links { flex-wrap: wrap; gap: 16px; }
+.ps-page { max-width: 1220px; margin: auto; padding: 48px 32px 72px; }
+.ps-page h1 { font-size: clamp(1.7rem, 4vw, 2.6rem); text-transform: uppercase; line-height: 1.2; }
+.ps-page h2 { font-size: 1rem; text-transform: uppercase; margin-bottom: 16px; }
+.ps-page h3 { font-size: .95rem; }
+.ps-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.ps-heading a, .ps-detail-link { text-decoration: underline; text-underline-offset: 4px; font-size: .85rem; }
+.ps-eyebrow { text-transform: uppercase; font-size: .7rem; letter-spacing: 1px; margin-bottom: 8px; }
+.ps-muted { color: var(--gray, #6b6b6b); font-size: .85rem; }
+.ps-stack { display: grid; gap: 24px; }
+.ps-panel { padding: 24px; border: 1px solid var(--black, #1a1a1a); min-width: 0; }
+.ps-notice { padding: 16px; border: 1px dashed var(--black, #1a1a1a); margin-bottom: 24px; font-size: .85rem; }
+.ps-checkout-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.ps-page .btn-primary, .ps-page .btn-outline, .ps-page .btn-danger, .cart-slot button, .cart-slot a { font-family: inherit; }
+.ps-page button:disabled, .cart-slot button:disabled { opacity: .5; cursor: wait; }
+.ps-page :focus-visible, .cart-slot :focus-visible { outline: 2px solid #b33a3a; outline-offset: 4px; }
+.ps-page input[type=checkbox], .ps-page input[type=radio] { accent-color: #1a1a1a; width: 18px; height: 18px; flex-shrink: 0; }
+.ps-cart-row { display: flex; gap: 18px; align-items: center; padding: 20px 0; border-top: 1px solid #b9b3a7; overflow-wrap: anywhere; }
+.ps-grow { flex: 1; min-width: 0; }
+.ps-thumbnail { display: grid; place-items: center; width: 88px; height: 108px; background: var(--placeholder, #d9d3c7); flex-shrink: 0; font-size: .65rem; text-align: center; }
+.ps-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.ps-text-button { font: inherit; font-size: .8rem; text-decoration: underline; color: #a12d2d; background: transparent; border: 0; cursor: pointer; }
+.ps-checkout-bar { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 20px; border: 1px solid #1a1a1a; background: var(--bg, #f2eee6); }
+.ps-empty { padding: 56px 24px; text-align: center; border: 1px dashed #1a1a1a; margin: 24px 0; }
+.ps-empty p { margin-bottom: 20px; }
+.ps-form, .ps-field { display: grid; gap: 8px; }
+.ps-form { gap: 24px; }
+.ps-field label, .ps-filter label { font-size: .8rem; font-weight: 600; }
+.ps-field input, .ps-field textarea, .ps-filter select { width: 100%; background: transparent; border: 1px solid #1a1a1a; padding: 12px; font: inherit; border-radius: 0; }
+.ps-field textarea { resize: vertical; }
+.ps-payment { padding: 16px; border: 1px solid #1a1a1a; display: grid; gap: 12px; }
+.ps-payment legend { font-weight: 600; font-size: .85rem; padding: 0 8px; }
+.ps-payment label { display: flex; align-items: center; gap: 12px; font-size: .85rem; }
+.ps-summary-item, .ps-totals > div, .ps-grand-total { display: flex; justify-content: space-between; gap: 20px; padding: 10px 0; font-size: .85rem; }
+.ps-summary-item > :first-child { min-width: 0; overflow-wrap: anywhere; }
+.ps-summary-item > :last-child, .ps-totals dd { flex-shrink: 0; }
+.ps-totals { border-top: 1px solid #1a1a1a; margin-top: 16px; }
+.ps-totals > div:last-child { border-top: 1px solid #1a1a1a; font-weight: 700; }
+.ps-grand-total { background: #1a1a1a; color: #f2eee6; padding: 24px; flex-wrap: wrap; }
+.ps-grand-total strong { font-size: 1.3rem; }
+.ps-error, .ps-unavailable, .ps-page .errorlist { color: #a12d2d; font-size: .85rem; }
+.ps-page .errorlist { padding-left: 16px; }
+.ps-success-heading { text-align: center; padding: 32px 0 48px; }
+.ps-success-heading strong { display: block; font-size: 1.6rem; margin-top: 16px; }
+.ps-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
+.ps-status { border: 1px solid #1a1a1a; padding: 4px 10px; text-transform: uppercase; font-size: .7rem; }
+.ps-status-completed { background: #1a1a1a; color: #f2eee6; }
+.ps-status-cancelled { color: #a12d2d; border-color: #a12d2d; }
+.ps-filter { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 32px 0; }
+.ps-filter select { width: auto; min-width: 160px; }
+.ps-pagination { display: flex; justify-content: center; gap: 24px; padding: 24px 0; }
+.ps-order-progress { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; margin-bottom: 24px; font-size: .8rem; }
+.cart-slot { margin: 12px 0; font-size: .8rem; }
+.cart-slot .btn-primary, .cart-slot .btn-outline { padding: 10px 14px; font-size: .7rem; margin: 0; }
+.cart-slot a:not([class]) { text-decoration: underline; }
+.ps-wishlist-image { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; }
+.ps-feedback { position: fixed; bottom: 20px; right: 20px; z-index: 500; max-width: min(420px, calc(100vw - 32px)); padding: 18px; border: 1px solid #1a1a1a; background: #f2eee6; box-shadow: 4px 4px #1a1a1a; }
+.ps-feedback p { font-size: .85rem; }
+.ps-feedback a, .ps-feedback button { display: inline-block; margin-top: 10px; text-decoration: underline; background: transparent; border: 0; font: inherit; font-size: .8rem; cursor: pointer; }
+.ps-feedback button { float: right; margin-left: 20px; }
+.ps-badge { border: 1px solid currentColor; min-width: 22px; display: inline-block; text-align: center; padding: 0 3px; }
+.messages { padding: 16px 32px; }
+.nav-logout { display: inline; }
+.nav-logout button { background: transparent; border: 0; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+@media(max-width: 760px) {
+  .navbar { padding: 16px; }
+  .nav-links { gap: 10px 16px; font-size: .7rem; }
+  .ps-page { padding: 28px 16px 48px; }
+  .ps-checkout-layout { grid-template-columns: minmax(0,1fr); gap: 20px; }
+  .ps-panel { padding: 18px; }
+  .ps-cart-row { gap: 10px; flex-wrap: wrap; }
+  .ps-thumbnail { width: 64px; height: 82px; }
+  .ps-checkout-bar { align-items: stretch; flex-direction: column; }
+  .ps-checkout-bar .btn-primary { margin: 0; }
+  .ps-heading { align-items: flex-start; }
+  .ps-order-progress { gap: 12px; }
+  .cart-slot .btn-primary, .cart-slot .btn-outline { width: 100%; text-align: center; }
+}
