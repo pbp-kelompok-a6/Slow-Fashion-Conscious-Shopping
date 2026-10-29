@@ -104,6 +104,32 @@ class ProductReviewsPageTest(ReviewTestBase):
         self.assertContains(response, 'id="review-form"')
 
 
+class ProductDetailIntegrationTest(ReviewTestBase):
+    """Slot ulasan harus muncul di halaman Detail Produk milik modul listing."""
+
+    def setUp(self):
+        super().setUp()
+        self.url = reverse("listing:product_detail", args=[self.product.pk])
+
+    def test_detail_page_includes_review_slot(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "ulasan/slots/product_reviews.html")
+        self.assertContains(response, reverse("ulasan:show_json", args=[self.product.pk]))
+
+    def test_buyer_sees_review_form_on_detail_page(self):
+        self.client.force_login(self.buyer)
+        response = self.client.get(self.url)
+        self.assertContains(response, 'id="review-form"')
+        self.assertContains(response, reverse("ulasan:create_review", args=[self.product.pk]))
+
+    def test_seller_does_not_see_review_form_on_own_detail_page(self):
+        self.client.force_login(self.seller)
+        response = self.client.get(self.url)
+        self.assertContains(response, "Ini produkmu sendiri")
+        self.assertNotContains(response, 'id="review-form"')
+
+
 class ShowJsonTest(ReviewTestBase):
     def setUp(self):
         super().setUp()
