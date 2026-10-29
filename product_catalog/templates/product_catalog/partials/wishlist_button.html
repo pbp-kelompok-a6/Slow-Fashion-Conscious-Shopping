@@ -1,0 +1,12 @@
+{% if not is_authenticated %}
+  <a class="btn-outline" href="{% url 'akun:login' %}?next={{ request.get_full_path|urlencode }}">Masuk untuk wishlist</a>
+{% else %}
+  <form method="post" action="{% url 'product_catalog:toggle_wishlist' product.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="in_wishlist" value="{% if in_wishlist %}false{% else %}true{% endif %}">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit" class="btn-outline">
+      {% if in_wishlist %}Hapus dari wishlist{% else %}Simpan ke wishlist{% endif %}
+    </button>
+  </form>
+{% endif %}

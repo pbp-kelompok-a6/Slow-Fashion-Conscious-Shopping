@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static format_tags pesanan_tags %}
+{% load static format_tags pesanan_tags wishlist_tags %}
 {% block title %}{{ product.name }} · LaPAKAIAN{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'listing/listing.css' %}">{% endblock %}
 
@@ -45,10 +45,10 @@
                 <span class="badge badge-sold" data-status-badge {% if product.status != "sold" %}hidden{% endif %}>Terjual</span>
             </div>
 
-            <div class="detail-actions">
-                {% include "pesanan/slots/add_to_cart.html" %}
-                {% include "product_catalog/slots/wishlist_button.html" %}
-            </div>
+          <div class="detail-actions">
+             {% cart_button product %}
+             {% wishlist_button product %}
+        </div>
 
             {% if is_owner %}
                 <div class="owner-actions" id="owner-actions"

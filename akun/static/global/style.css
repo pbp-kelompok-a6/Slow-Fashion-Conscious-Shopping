@@ -850,3 +850,54 @@ footer a:hover { opacity: 0.7; }
   .toast-container { right: 16px; bottom: 16px; left: 16px; max-width: none; }
   .btn-row > .btn-primary, .btn-row > .btn-outline, .btn-row > .btn-danger { flex: 1 1 auto; text-align: center; }
 }
+
+.kategori-card {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  color: #fff;
+}
+.kategori-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+.kategori-card { isolation: isolate; }
+
+.kategori-card[href$="category=atasan"]    { background-image: url("/media/product_images/dummy/02-kemeja-oversized-putih.jpg"); }
+.kategori-card[href$="category=bawahan"]   { background-image: url("/media/product_images/dummy/11-501-jeans-light-wash.jpg"); }
+.kategori-card[href$="category=outerwear"] { background-image: url("/media/product_images/dummy/03-trench-coat-beige.jpg"); }
+.kategori-card[href$="category=dress"] { background-image: url("/media/product_images/dummy/31-midi-dress-motif-bunga.jpg"); }
+.kategori-card[href$="category=sepatu"]   { background-image: url("/media/product_images/dummy/30-ankle-boots-hitam.jpg"); }
+.kategori-card[href$="category=tas"]      { background-image: url("/media/product_images/dummy/44-shoulder-bag-kulit-hitam.jpg"); }
+.kategori-card[href$="category=aksesori"] { background-image: url("/media/product_images/dummy/50-beanie-rajut-krem.jpg"); }
+.kategori-card[href$="category=lainnya"]  { background-image: url("/media/product_images/dummy/49-jam-tangan-analog-silver.jpg"); }
+.nav-dropdown { position: relative; }
+.nav-dropdown-toggle {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit;
+}
+.nav-dropdown-menu {
+  display: none; position: absolute; top: 100%; left: 0; z-index: 50;
+  min-width: 240px; background: #f2ede6; border: 1px solid #1a1a1a;
+}
+.nav-dropdown.open .nav-dropdown-menu { display: flex; flex-direction: column; }
+.nav-dropdown-menu a { padding: 14px 24px; border-bottom: 1px solid #1a1a1a; }
+.nav-dropdown-menu a:last-child { border-bottom: 0; }
+
+.hero-image {
+  background-image: url("/media/product_images/dummy/01-linen-blazer-krem.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.kategori-card { z-index: 0; }
+.kategori-card::before { z-index: -1; }
+
+.auth-photo {
+  background-image: url("/media/product_images/dummy/03-trench-coat-beige.jpg");
+  background-size: cover;
+  background-position: center;
+  font-size: 0; /* sembunyikan teks "Foto editorial" */
+}
