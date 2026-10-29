@@ -3,20 +3,22 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, auth
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 from .forms import RegisterForm, ProfileForm
 from .models import Profile
-
+# validasi, simpan, ambil, delete data 
 def landing(request):
     return render(request, "landing.html")
 
 def register(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
+        # Mengambil data dari form
+        form = RegisterForm(request.POST) 
+        if form.is_valid(): 
             user = form.save()
-            Profile.objects.create(user=user)
-            auth_login(request, user)
+            # field user pada Profile diisi dengan objek User yang baru saja dibuat.
+            Profile.objects.create(user=user) 
+            auth_login(request, user) 
             return redirect("akun:profil")
     else:
         form = RegisterForm()
@@ -39,13 +41,18 @@ def logout_view(request):
 
 @login_required
 def profil(request):
-    profile = request.user.profile
-    if request.method == "POST":
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-            profile.bio = form.cleaned_data["bio"]
-            profile.save()
-    return render(request, "akun/profil.html", {"profile": profile})
+    # Hanya menampilkan halaman. Simpan bio ada di edit_profil.
+    return render(request, "akun/profil.html", {"profile": request.user.profile})
+
+@login_required
+@require_POST
+def edit_profil(request):
+    form = ProfileForm(request.POST)
+    if form.is_valid():
+        profile = request.user.profile 
+        profile.bio = form.cleaned_data["bio"]
+        profile.save()
+    return redirect("akun:profil")
 
 @login_required
 def hapus_akun(request):
@@ -55,9 +62,25 @@ def hapus_akun(request):
     return render(request, "akun/profil.html", {"profile": request.user.profile})
 
 @login_required
-@require_POST
+# memastikan view itu hanya bisa dijalankan lewat request POST.
+@require_POST 
 def toggle_seller(request):
-    profile = request.user.profile
+    # Kalau pengguna login adalah burhan, Django mencari profil milik burhan
+    profile = request.user.profile 
     profile.is_seller = not profile.is_seller
     profile.save()
     return JsonResponse({"is_seller": profile.is_seller})
+
+@login_required
+@require_GET
+def profil_json(request):
+    profile = request.user.profile
+    return JsonResponse({
+        "success": True,
+        "profile": {
+            "username": request.user.username,
+            "bio": profile.bio,
+            "is_seller": profile.is_seller,
+            "date_joined": request.user.date_joined.isoformat(),
+        },
+    })

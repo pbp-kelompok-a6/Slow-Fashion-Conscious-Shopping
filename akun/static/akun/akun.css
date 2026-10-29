@@ -1,0 +1,106 @@
+/* Halaman profil. Semua selector di-scope ke .profil-grid agar tidak bentrok dengan modul lain */
+.profil-grid { --danger: #B33A3A; }
+.profil-grid [hidden] { display: none !important; }
+.profil-grid .muted { color: var(--gray); }
+.profil-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+  margin-bottom: 24px;
+}
+
+.profil-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profil-card {
+  border: 1px solid var(--black);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profil-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.profil-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.profil-identity { display: flex; align-items: center; gap: 16px; }
+
+
+
+.profil-username {
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.profil-bio { white-space: pre-line; overflow-wrap: anywhere; }
+
+.profil-grid .link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.profil-card textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--black);
+  border-radius: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 96px;
+  margin-bottom: 14px;
+}
+
+.profil-status { font-weight: 600; }
+
+.profil-grid .badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--black);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.profil-grid .badge-active { background: var(--black); color: var(--bg); }
+
+.profil-grid .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.profil-grid .btn-row > button { margin-right: 0; }
+.profil-grid .btn-sm { padding: 8px 16px; font-size: 0.75rem; }
+
+.profil-danger { border-color: var(--danger); }
+.profil-danger .profil-card-title { color: var(--danger); }
+.profil-danger form { align-self: flex-start; }
+.profil-danger .btn-danger { margin-right: 0; }
+
+@media (max-width: 600px) {
+  .profil-grid { grid-template-columns: 1fr; }
+  .profil-card { padding: 18px; }
+}

@@ -1,21 +1,17 @@
-from django.shortcuts import render
-
-# Create your views here.
 from functools import wraps
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.db.models import Count, Q
+from django.http import HttpResponseForbidden, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.views.decorators.http import require_GET, require_POST
 
 from akun.models import Profile
-from .models import Product
 from .forms import ProductForm, ProductImageFormSet
-
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-
+from .models import Product
+from .utils import product_card_data
 
 
 def seller_required(view_func):
@@ -43,10 +39,39 @@ def seller_required(view_func):
     return wrapper
 
 
+def get_own_product(request, pk):
+    """Produk milik seller yang login; produk orang lain -> 404."""
+    return get_object_or_404(Product, pk=pk, seller=request.user)
+
+
+def status_counts(seller):
+    counts = Product.objects.filter(seller=seller).aggregate(
+        semua=Count("pk"),
+        active=Count("pk", filter=Q(status="active")),
+        sold=Count("pk", filter=Q(status="sold")),
+    )
+    return counts
+
+
+def product_detail_data(product):
+    data = product_card_data(product)
+    data.update({
+        "description": product.description,
+        "images": [
+            {"url": image.image.url, "alt_text": image.alt_text}
+            for image in product.images.all()
+        ],
+        "store_url": reverse("profil_toko:detail", args=[product.seller.username]),
+        "updated_at": product.updated_at.isoformat(),
+    })
+    return data
 
 
 @seller_required
 def product_create(request):
+    """
+    Display the Add Product form and save a new listing.
+    """
     product = Product(seller=request.user)
 
     if request.method == "POST":
@@ -57,10 +82,7 @@ def product_create(request):
             instance=product,
         )
 
-        form_valid = form.is_valid()
-        images_valid = image_formset.is_valid()
-
-        if form_valid and images_valid:
+        if form.is_valid() and image_formset.is_valid():
             product = form.save(commit=False)
             product.seller = request.user
             product.save()
@@ -68,19 +90,8 @@ def product_create(request):
             image_formset.instance = product
             image_formset.save()
 
-            messages.success(
-                request,
-                f'"{product.name}" berhasil ditambahkan!'
-            )
+            messages.success(request, "Produk berhasil ditambahkan!")
             return redirect("listing:my_listings")
-
-        print("PRODUCT FORM ERRORS:", form.errors)
-        print("IMAGE FORMSET ERRORS:", image_formset.errors)
-        print(
-            "IMAGE FORMSET NON-FORM ERRORS:",
-            image_formset.non_form_errors()
-        )
-
     else:
         form = ProductForm(instance=product)
         image_formset = ProductImageFormSet(instance=product)
@@ -91,12 +102,9 @@ def product_create(request):
         {
             "form": form,
             "image_formset": image_formset,
-            "page_title": "Tambah Produk",
-            "product": product,
+            "page_title": "Tambah Listing",
         },
     )
-
-
 
 
 @seller_required
@@ -105,7 +113,10 @@ def my_listings(request):
     Show only the current seller's products.
     Supports filtering by status and category.
     """
-    products = Product.objects.filter(seller=request.user)
+    products = (
+        Product.objects.filter(seller=request.user)
+        .prefetch_related("images")
+    )
 
     selected_status = request.GET.get("status", "")
     selected_category = request.GET.get("category", "")
@@ -113,10 +124,15 @@ def my_listings(request):
     valid_statuses = dict(Product.STATUS_CHOICES)
     valid_categories = dict(Product.CATEGORY_CHOICES)
 
-    if selected_status in valid_statuses:
+    if selected_status not in valid_statuses:
+        selected_status = ""
+    if selected_category not in valid_categories:
+        selected_category = ""
+
+    if selected_status:
         products = products.filter(status=selected_status)
 
-    if selected_category in valid_categories:
+    if selected_category:
         products = products.filter(category=selected_category)
 
     return render(
@@ -124,6 +140,7 @@ def my_listings(request):
         "listing/my_listings.html",
         {
             "products": products,
+            "counts": status_counts(request.user),
             "status_choices": Product.STATUS_CHOICES,
             "category_choices": Product.CATEGORY_CHOICES,
             "selected_status": selected_status,
@@ -131,15 +148,23 @@ def my_listings(request):
         },
     )
 
-@seller_required
+
 def product_detail(request, pk):
     """
-    Display the details of a product owned by the seller.
+    Public product page. Edit/delete/mark sold buttons are only
+    rendered for the seller who owns the product.
     """
     product = get_object_or_404(
-        Product,
+        Product.objects.select_related("seller").prefetch_related("images"),
         pk=pk,
-        seller=request.user,
+    )
+    is_owner = request.user.is_authenticated and product.seller_id == request.user.pk
+
+    same_store = (
+        Product.objects.public()
+        .filter(seller=product.seller)
+        .exclude(pk=product.pk)
+        .prefetch_related("images")[:4]
     )
 
     return render(
@@ -147,19 +172,18 @@ def product_detail(request, pk):
         "listing/product_detail.html",
         {
             "product": product,
+            "is_owner": is_owner,
+            "same_store": same_store,
         },
     )
+
 
 @seller_required
 def product_edit(request, pk):
     """
     Edit a product owned by the logged-in seller.
     """
-    product = get_object_or_404(
-        Product,
-        pk=pk,
-        seller=request.user,
-    )
+    product = get_own_product(request, pk)
 
     if request.method == "POST":
         form = ProductForm(
@@ -200,98 +224,125 @@ def product_edit(request, pk):
         {
             "form": form,
             "image_formset": image_formset,
-            "page_title": "Edit Produk",
+            "page_title": "Edit Listing",
             "product": product,
         },
     )
 
+
 @seller_required
 @require_POST
 def product_delete(request, pk):
-    product = get_object_or_404(
-        Product,
-        pk=pk,
-        seller=request.user
-    )
+    product = get_own_product(request, pk)
 
     product.delete()
 
     return JsonResponse({
         "success": True,
-        "message": "Produk berhasil dihapus."
+        "message": "Produk berhasil dihapus.",
+        "counts": status_counts(request.user),
+        "redirect_url": reverse("listing:my_listings"),
+    })
+
+
+def _set_status(request, pk, new_status, already_message, success_message):
+    product = get_own_product(request, pk)
+
+    if product.status == new_status:
+        return JsonResponse({
+            "success": False,
+            "message": already_message,
+        }, status=400)
+
+    product.status = new_status
+    product.save(update_fields=["status", "updated_at"])
+
+    return JsonResponse({
+        "success": True,
+        "message": success_message,
+        "status": product.status,
+        "status_display": product.get_status_display(),
+        "counts": status_counts(request.user),
     })
 
 
 @seller_required
 @require_POST
 def product_mark_sold(request, pk):
-    product = get_object_or_404(
-        Product,
-        pk=pk,
-        seller=request.user
+    return _set_status(
+        request, pk, "sold",
+        "Produk ini sudah ditandai sebagai terjual.",
+        "Produk berhasil ditandai sebagai terjual.",
     )
 
-    if product.status == "sold":
-        return JsonResponse({
-            "success": False,
-            "message": "Produk ini sudah ditandai sebagai terjual."
-        }, status=400)
-
-    product.status = "sold"
-    product.save(update_fields=["status", "updated_at"])
-
-    return JsonResponse({
-        "success": True,
-        "message": "Produk berhasil ditandai sebagai terjual.",
-        "status": product.status,
-        "status_display": product.get_status_display()
-    })
 
 @seller_required
+@require_POST
+def product_mark_active(request, pk):
+    return _set_status(
+        request, pk, "active",
+        "Produk ini masih aktif.",
+        "Produk kembali aktif dan tampil di katalog.",
+    )
+
+
+@require_GET
 def product_list_json(request):
-    products = Product.objects.filter(seller=request.user)
+    """Produk aktif publik (seller aktif). Filter opsional: category, seller."""
+    products = (
+        Product.objects.public()
+        .select_related("seller")
+        .prefetch_related("images")
+    )
+    category = request.GET.get("category")
+    if category in dict(Product.CATEGORY_CHOICES):
+        products = products.filter(category=category)
+    seller = request.GET.get("seller")
+    if seller:
+        products = products.filter(seller__username=seller)
 
-    selected_status = request.GET.get("status", "")
-    selected_category = request.GET.get("category", "")
-
-    valid_statuses = dict(Product.STATUS_CHOICES)
-    valid_categories = dict(Product.CATEGORY_CHOICES)
-
-    if selected_status in valid_statuses:
-        products = products.filter(status=selected_status)
-
-    if selected_category in valid_categories:
-        products = products.filter(category=selected_category)
-
-    product_data = []
-
-    for product in products:
-        first_image = product.images.first()
-
-        image_url = (
-            first_image.image.url
-            if first_image and first_image.image
-            else None
-        )
-
-        product_data.append({
-            "id": product.pk,
-            "name": product.name,
-            "brand": product.brand,
-            "description": product.description,
-            "category": product.category,
-            "category_display": product.get_category_display(),
-            "size": product.size,
-            "condition": product.condition,
-            "condition_display": product.get_condition_display(),
-            "price": str(product.price),
-            "status": product.status,
-            "status_display": product.get_status_display(),
-            "image_url": image_url,
-            "created_at": product.created_at.isoformat(),
-        })
-
+    data = [product_card_data(product) for product in products]
     return JsonResponse({
         "success": True,
-        "products": product_data,
+        "message": "OK",
+        "count": len(data),
+        "products": data,
+    })
+
+
+@require_GET
+def product_detail_json(request, pk):
+    product = get_object_or_404(
+        Product.objects.select_related("seller").prefetch_related("images"),
+        pk=pk,
+    )
+    return JsonResponse({
+        "success": True,
+        "message": "OK",
+        "product": product_detail_data(product),
+    })
+
+
+@seller_required
+@require_GET
+def my_products_json(request):
+    products = (
+        Product.objects.filter(seller=request.user)
+        .select_related("seller")
+        .prefetch_related("images")
+    )
+    status = request.GET.get("status")
+    if status in dict(Product.STATUS_CHOICES):
+        products = products.filter(status=status)
+    category = request.GET.get("category")
+    if category in dict(Product.CATEGORY_CHOICES):
+        products = products.filter(category=category)
+
+    data = [product_card_data(product) for product in products]
+    return JsonResponse({
+        "success": True,
+        "message": "OK",
+        "count": len(data),
+        "counts": status_counts(request.user),
+        "products": data,
     })

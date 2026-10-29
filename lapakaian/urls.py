@@ -27,6 +27,7 @@ urlpatterns = [
     path("akun/", include("akun.urls")),
     path("ulasan/", include("ulasan.urls")),
     path("listing/", include("listing.urls")),
+    path("toko/", include("profil_toko.urls")),
 ]
 
 if settings.DEBUG:
