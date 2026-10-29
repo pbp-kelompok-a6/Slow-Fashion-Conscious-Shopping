@@ -1,0 +1,10 @@
+{% comment %}
+  Slot ulasan toko (milik modul ulasan).
+  Di-include dari profil_toko/detail.html dengan variabel `store_owner` (User pemilik toko).
+  Pembungkus <section> sudah disediakan oleh template profil toko.
+{% endcomment %}
+{% if store_owner %}
+  {% url 'ulasan:show_store_json' store_owner.username as json_url %}
+  {% url 'ulasan:create_store_review' store_owner.username as create_url %}
+  {% include "ulasan/partials/reviews_block.html" with title="Ulasan Toko" json_url=json_url create_url=create_url target_owner_id=store_owner.id target_label="toko ini" owner_note="Ini tokomu sendiri, jadi kamu tidak bisa mengulasnya." %}
+{% endif %}

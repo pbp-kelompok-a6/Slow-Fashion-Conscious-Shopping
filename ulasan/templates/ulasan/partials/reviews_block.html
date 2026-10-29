@@ -1,0 +1,312 @@
+{% load static %}
+{% comment %}
+  Blok ulasan yang dipakai bersama oleh slot produk dan slot toko.
+  Jangan di-include langsung; pakai ulasan/slots/product_reviews.html atau store_reviews.html.
+  Variabel yang dibutuhkan:
+    title           judul blok, mis. "Ulasan Produk"
+    json_url        URL JSON daftar ulasan
+    create_url      URL untuk menambah ulasan
+    target_owner_id id user pemilik produk/toko (tidak boleh mengulas)
+    target_label    mis. "produk ini" / "toko ini"
+    owner_note      pesan untuk pemilik produk/toko
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'ulasan/ulasan.css' %}">
+
+<div class="review-section">
+  <div class="section-head">
+    <h2>{{ title }}</h2>
+    <select id="review-sort" class="review-sort">
+      <option value="terbaru">Terbaru</option>
+      <option value="rating">Rating Tertinggi</option>
+    </select>
+  </div>
+
+  <p id="review-summary" class="review-summary"></p>
+
+  {% comment %} Filter autentikasi: form hanya untuk pengguna login yang bukan pemilik produk/toko {% endcomment %}
+  {% if not user.is_authenticated %}
+    <p class="review-note">
+      <a href="{% url 'akun:login' %}" class="review-link">Masuk</a> untuk menulis ulasan.
+    </p>
+  {% elif target_owner_id == user.id %}
+    <p class="review-note">{{ owner_note }}</p>
+  {% else %}
+    <p id="review-already" class="review-note" hidden>Kamu sudah mengulas {{ target_label }}.</p>
+
+    <form id="review-form" class="review-form" hidden>
+      {% csrf_token %}
+      <label for="review-rating">Rating</label>
+      <select id="review-rating" name="rating" required>
+        <option value="">Pilih rating</option>
+        <option value="5">★★★★★ (5 - Sangat Baik)</option>
+        <option value="4">★★★★☆ (4 - Baik)</option>
+        <option value="3">★★★☆☆ (3 - Cukup)</option>
+        <option value="2">★★☆☆☆ (2 - Buruk)</option>
+        <option value="1">★☆☆☆☆ (1 - Sangat Buruk)</option>
+      </select>
+      <p class="review-error" data-error-for="rating"></p>
+
+      <label for="review-komentar">Komentar</label>
+      <textarea id="review-komentar" name="komentar" rows="4" maxlength="1000" required
+        placeholder="Ceritakan pengalamanmu dengan {{ target_label }}..."></textarea>
+      <p class="review-error" data-error-for="komentar"></p>
+
+      <button type="submit" id="review-submit" class="btn-primary">Kirim Ulasan</button>
+      <p id="review-form-message" class="review-message" role="status"></p>
+    </form>
+  {% endif %}
+
+  <div id="review-list" class="review-list">
+    <p class="review-empty">Memuat ulasan...</p>
+  </div>
+</div>
+
+<script>
+  const REVIEWS_JSON_URL = "{{ json_url|escapejs }}";
+
+  // Mencegah XSS: data dari server dimasukkan ke innerHTML,
+  // jadi karakter khusus HTML harus di-escape dulu ("&" harus paling awal)
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function renderStars(rating) {
+    return "★".repeat(rating) + "☆".repeat(5 - rating);
+  }
+
+  // Data ulasan terakhir yang dimuat, disimpan per id supaya form edit bisa diisi otomatis
+  let currentReviews = {};
+
+  // Ambil nilai cookie (dipakai untuk csrftoken), sama seperti di Tutorial 5
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+
+  function renderReview(review) {
+    return `
+      <article class="review-item" data-review-id="${escapeHtml(review.id)}">
+        <div class="review-head">
+          <strong>${escapeHtml(review.username)}</strong>
+          ${review.is_owner ? '<span class="review-badge">Ulasan kamu</span>' : ""}
+          <span class="review-date">
+            ${escapeHtml(review.created_at)}${review.is_edited ? " (diedit)" : ""}
+          </span>
+        </div>
+        <div class="review-stars" aria-label="Rating ${review.rating} dari 5">
+          ${renderStars(review.rating)}
+        </div>
+        <p class="review-comment">${escapeHtml(review.komentar)}</p>
+        ${review.is_owner ? `
+          <div class="review-actions">
+            <button type="button" class="review-action" data-action="edit">Edit</button>
+            <button type="button" class="review-action is-danger" data-action="delete">Hapus</button>
+          </div>` : ""}
+      </article>
+    `;
+  }
+
+  function renderEditForm(review) {
+    let options = "";
+    for (let value = 5; value >= 1; value--) {
+      const selected = value === review.rating ? "selected" : "";
+      options += `<option value="${value}" ${selected}>${renderStars(value)} (${value})</option>`;
+    }
+    return `
+      <form class="review-form review-edit-form">
+        <label>Rating</label>
+        <select name="rating" required>${options}</select>
+        <p class="review-error" data-error-for="rating"></p>
+
+        <label>Komentar</label>
+        <textarea name="komentar" rows="4" maxlength="1000" required>${escapeHtml(review.komentar)}</textarea>
+        <p class="review-error" data-error-for="komentar"></p>
+
+        <button type="submit" class="btn-primary">Simpan</button>
+        <button type="button" class="btn-outline" data-action="cancel">Batal</button>
+        <p class="review-message" role="status"></p>
+      </form>
+    `;
+  }
+
+  // Tampilkan error per field (dipakai form tambah dan form edit)
+  function showFormErrors(form, errors) {
+    for (const field in errors) {
+      const target = form.querySelector(`[data-error-for="${field}"]`);
+      if (target) {
+        target.textContent = errors[field].map((e) => e.message).join(" ");
+      }
+    }
+  }
+
+  async function loadReviews() {
+    const list = document.getElementById("review-list");
+    const summary = document.getElementById("review-summary");
+    const sort = document.getElementById("review-sort").value;
+
+    try {
+      const response = await fetch(`${REVIEWS_JSON_URL}?sort=${encodeURIComponent(sort)}`);
+      if (!response.ok) {
+        throw new Error("Gagal memuat ulasan");
+      }
+      const data = await response.json();
+
+      currentReviews = {};
+      data.reviews.forEach((review) => (currentReviews[review.id] = review));
+
+      // Satu ulasan per produk: kalau user sudah punya ulasan, sembunyikan form-nya
+      const form = document.getElementById("review-form");
+      if (form) {
+        const alreadyReviewed = data.reviews.some((review) => review.is_owner);
+        form.hidden = alreadyReviewed;
+        document.getElementById("review-already").hidden = !alreadyReviewed;
+      }
+
+      if (data.jumlah === 0) {
+        summary.textContent = "";
+        list.innerHTML = '<p class="review-empty">Belum ada ulasan untuk {{ target_label|escapejs }}.</p>';
+        return;
+      }
+
+      summary.textContent = `★ ${data.rata_rata} dari 5 · ${data.jumlah} ulasan`;
+      list.innerHTML = data.reviews.map(renderReview).join("");
+    } catch (error) {
+      list.innerHTML = '<p class="review-empty">Ulasan gagal dimuat. Coba muat ulang halaman.</p>';
+    }
+  }
+
+  // Ganti urutan tanpa reload halaman
+  document.getElementById("review-sort").addEventListener("change", loadReviews);
+  loadReviews();
+
+  // Tambah ulasan via AJAX (form hanya ada kalau user boleh mengulas)
+  const reviewForm = document.getElementById("review-form");
+  if (reviewForm) {
+    const CREATE_REVIEW_URL = "{{ create_url|escapejs }}";
+
+    reviewForm.addEventListener("submit", async (event) => {
+      event.preventDefault();  // cegah form reload halaman
+
+      const submitButton = document.getElementById("review-submit");
+      const message = document.getElementById("review-form-message");
+      reviewForm.querySelectorAll(".review-error").forEach((el) => (el.textContent = ""));
+      message.textContent = "";
+      message.classList.remove("is-error");
+      submitButton.disabled = true;
+
+      try {
+        // FormData ikut membawa csrfmiddlewaretoken dari {% csrf_token %}
+        const response = await fetch(CREATE_REVIEW_URL, {
+          method: "POST",
+          body: new FormData(reviewForm),
+        });
+        const result = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          reviewForm.reset();
+          message.textContent = result.message;
+          loadReviews();  // ulasan baru langsung muncul tanpa reload
+        } else {
+          // 400: tampilkan error per field di bawah input masing-masing
+          showFormErrors(reviewForm, result.errors || {});
+          message.textContent = result.message || "Terjadi kesalahan. Coba lagi.";
+          message.classList.add("is-error");
+        }
+      } catch (error) {
+        message.textContent = "Tidak dapat terhubung ke server. Coba lagi.";
+        message.classList.add("is-error");
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  }
+
+  // Edit ulasan via AJAX.
+  // Isi #review-list selalu di-render ulang oleh JS, jadi event-nya dipasang sekali
+  // di #review-list (event delegation), bukan di setiap tombol.
+  const reviewList = document.getElementById("review-list");
+
+  reviewList.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+    const article = button.closest(".review-item");
+    const review = currentReviews[article.dataset.reviewId];
+
+    if (button.dataset.action === "edit") {
+      article.innerHTML = renderEditForm(review);
+    } else if (button.dataset.action === "cancel") {
+      article.outerHTML = renderReview(review);
+    } else if (button.dataset.action === "delete") {
+      await deleteReview(review, button);
+    }
+  });
+
+  // Hapus ulasan via AJAX
+  async function deleteReview(review, button) {
+    if (!confirm("Yakin ingin menghapus ulasan ini?")) return;
+    button.disabled = true;
+
+    try {
+      const response = await fetch(review.delete_url, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        // Daftar dimuat ulang: ulasan hilang, ringkasan rating diperbarui,
+        // dan form tambah ulasan muncul lagi
+        loadReviews();
+      } else {
+        alert(result.message || "Ulasan gagal dihapus. Coba lagi.");
+        button.disabled = false;
+      }
+    } catch (error) {
+      alert("Tidak dapat terhubung ke server. Coba lagi.");
+      button.disabled = false;
+    }
+  }
+
+  reviewList.addEventListener("submit", async (event) => {
+    const form = event.target.closest(".review-edit-form");
+    if (!form) return;
+    event.preventDefault();
+
+    const article = form.closest(".review-item");
+    const review = currentReviews[article.dataset.reviewId];
+    const message = form.querySelector(".review-message");
+    const submitButton = form.querySelector('button[type="submit"]');
+    form.querySelectorAll(".review-error").forEach((el) => (el.textContent = ""));
+    message.textContent = "";
+    message.classList.remove("is-error");
+    submitButton.disabled = true;
+
+    try {
+      const response = await fetch(review.edit_url, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+        body: new FormData(form),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        loadReviews();  // daftar dimuat ulang, label "(diedit)" ikut muncul
+      } else {
+        showFormErrors(form, result.errors || {});
+        message.textContent = result.message || "Terjadi kesalahan. Coba lagi.";
+        message.classList.add("is-error");
+        submitButton.disabled = false;
+      }
+    } catch (error) {
+      message.textContent = "Tidak dapat terhubung ke server. Coba lagi.";
+      message.classList.add("is-error");
+      submitButton.disabled = false;
+    }
+  });
+</script>

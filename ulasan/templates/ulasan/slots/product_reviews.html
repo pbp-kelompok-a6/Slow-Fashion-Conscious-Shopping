@@ -1,0 +1,10 @@
+{% comment %}
+  Slot ulasan produk (milik modul ulasan).
+  Cara pakai di template lain (butuh variabel `product`):
+  {% include "ulasan/slots/product_reviews.html" %}
+{% endcomment %}
+{% url 'ulasan:show_json' product.pk as json_url %}
+{% url 'ulasan:create_review' product.pk as create_url %}
+<section class="section">
+  {% include "ulasan/partials/reviews_block.html" with title="Ulasan Produk" json_url=json_url create_url=create_url target_owner_id=product.seller_id target_label="produk ini" owner_note="Ini produkmu sendiri, jadi kamu tidak bisa mengulasnya." %}
+</section>

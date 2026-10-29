@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section">
+  <p class="review-empty">Ulasan untuk</p>
+  <h1>{{ product.name }}</h1>
+</section>
+
+{% include "ulasan/slots/product_reviews.html" %}
+{% endblock %}
