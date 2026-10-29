@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static format_tags %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/phase2.css' %}">{% endblock %}
+{% block content %}
+<section data-wishlist-json="{% url 'product_catalog:wishlist_json' %}" data-json-url="{% url 'product_catalog:katalog_json' %}" class="pc-page pc-catalog">
+  <header class="pc-heading">
+    <h1>Katalog</h1>
+    <div class="pc-heading-actions"><span class="pc-muted">{{ page_obj.paginator.count }} produk</span>
+      <label class="pc-sr-only" for="sort">Urutkan</label>
+      <select name="sort" id="sort" form="katalog-filter">
+        {% for value, label in options.sorts %}<option value="{{ value }}" {% if filters.sort == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+  </header>
+  <div class="pc-search">
+    <label class="pc-sr-only" for="q">Cari</label>
+    <input type="search" name="q" id="q" form="katalog-filter" placeholder="Cari nama atau brand" value="{{ filters.q }}">
+    <button type="submit" form="katalog-filter" class="pc-button">Cari</button>
+  </div>
+  <div class="pc-chips pc-categories" role="radiogroup" aria-label="Kategori">
+    <label class="pc-chip"><input type="radio" name="category" value="" form="katalog-filter" {% if not filters.category %}checked{% endif %}> Semua</label>
+    {% for value, label in options.categories %}<label class="pc-chip"><input type="radio" name="category" value="{{ value }}" form="katalog-filter" {% if filters.category == value %}checked{% endif %}> {{ label }}</label>{% endfor %}
+  </div>
+  <div class="pc-layout">
+    <form method="get" action="{% url 'product_catalog:katalog' %}" id="katalog-filter">
+      <aside class="pc-sidebar" id="katalog-sidebar" aria-label="Filter produk">
+        <fieldset class="pc-filter-group">
+          <legend class="pc-eyebrow">Brand</legend>
+          {% for brand in options.brands %}
+            <label class="pc-choice">
+              <input type="checkbox" name="brand" value="{{ brand }}" {% for b in filters.brand %}{% if b|lower == brand|lower %}checked{% endif %}{% endfor %}>
+              <span>{{ brand }}</span>
+            </label>
+          {% empty %}
+            <p>Belum ada brand.</p>
+          {% endfor %}
+        </fieldset>
+
+        <fieldset class="pc-filter-group">
+          <legend class="pc-eyebrow">Size</legend>
+          <div>
+            {% for size in options.sizes %}
+              <label class="pc-chip"><input type="checkbox" name="size" value="{{ size }}" {% for s in filters.size %}{% if s|lower == size|lower %}checked{% endif %}{% endfor %}> {{ size }}</label>
+            {% endfor %}
+          </div>
+        </fieldset>
+
+        <fieldset class="pc-filter-group">
+          <legend class="pc-eyebrow">Kondisi</legend>
+          <div>
+            {% for value, label in options.conditions %}
+              <label class="pc-chip"><input type="checkbox" name="condition" value="{{ value }}" {% if value in filters.condition %}checked{% endif %}> {{ label }}</label>
+            {% endfor %}
+          </div>
+        </fieldset>
+
+        <fieldset class="pc-filter-group">
+          <legend class="pc-eyebrow">Harga</legend>
+          <div>
+            <div class="pc-price-input"><span>Rp</span><input type="number" name="min_price" min="0" step="0.01" placeholder="Min" aria-label="Harga minimum" value="{% if filters.min_price is not None %}{{ filters.min_price|floatformat:"2u" }}{% endif %}"></div>
+            <div class="pc-price-input"><span>Rp</span><input type="number" name="max_price" min="0" step="0.01" placeholder="Maks" aria-label="Harga maksimum" value="{% if filters.max_price is not None %}{{ filters.max_price|floatformat:"2u" }}{% endif %}"></div>
+          </div>
+        </fieldset>
+
+        <div>
+          <button class="pc-button" type="submit">Terapkan</button>
+          <a class="pc-text-link" href="{{ clear_url }}">Reset</a>
+        </div>
+      </aside>
+    </form>
+    <div class="pc-results">
+        {% if active_chips %}
+          <div class="pc-chips pc-active-filters" aria-label="Filter aktif">
+            {% for chip in active_chips %}
+              <a class="pc-chip" href="{{ chip.url }}" aria-label="Hapus filter {{ chip.label }}">{{ chip.label }} <span aria-hidden="true">×</span></a>
+            {% endfor %}
+            <a class="pc-text-link" href="{{ clear_url }}">Hapus semua</a>
+          </div>
+        {% endif %}
+
+        <div class="pc-grid pc-catalog-grid">
+          {% for product in products %}
+            <article data-product-id="{{ product.pk }}" class="pc-card">
+              <div class="pc-media">
+                {% with image=product.images.all|first %}
+                  {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy">{% else %}<span class="pc-no-image">Belum ada foto</span>{% endif %}
+                {% endwith %}
+                {% if user.is_authenticated %}
+                  <form data-wishlist-toggle method="post" action="{% url 'product_catalog:toggle_wishlist' product.pk %}">
+                    {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button class="pc-heart {% if product.pk in wishlist_product_ids %}pc-saved{% endif %}" type="submit" aria-label="{% if product.pk in wishlist_product_ids %}Hapus dari wishlist{% else %}Simpan ke wishlist{% endif %}" aria-pressed="{% if product.pk in wishlist_product_ids %}true{% else %}false{% endif %}">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
+                    </button>
+                  </form>
+                {% else %}
+                  <a class="pc-heart" href="{% url 'akun:login' %}?next={{ request.get_full_path|urlencode }}" aria-label="Masuk untuk menyimpan ke wishlist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg></a>
+                {% endif %}
+              </div>
+              <div class="pc-card-info">
+                <h2>{{ product.name }}</h2><p class="pc-price">{{ product.price|rupiah }}</p>
+                <p class="pc-meta">{% if product.brand %}{{ product.brand }} &middot; {% endif %}{{ product.size }} &middot; {{ product.get_condition_display }}</p>
+                <p class="pc-meta">{{ product.get_category_display }} &middot; {{ product.seller.username }}</p>
+              </div>
+            </article>
+          {% empty %}
+            <div class="pc-empty">
+              <h2>Produk tidak ditemukan</h2>
+              <p>Coba ubah kata kunci atau kurangi filter.</p>
+              <a href="{% url 'product_catalog:katalog' %}">Lihat semua produk</a>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+          <nav class="pc-pagination" aria-label="Halaman">
+            {% if page_obj.has_previous %}
+              <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">‹</a>
+            {% else %}
+              <span>‹</span>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+              {% if num == page_obj.number %}
+                <span aria-current="page">{{ num }}</span>
+              {% else %}
+                <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ num }}">{{ num }}</a>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">›</a>
+            {% else %}
+              <span>›</span>
+            {% endif %}
+          </nav>
+          <p class="pc-page-info">Menampilkan {{ page_obj.start_index }}–{{ page_obj.end_index }} dari {{ page_obj.paginator.count }}</p>
+        {% endif %}
+      </div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'product_catalog/phase3.js' %}" defer></script>{% endblock %}
