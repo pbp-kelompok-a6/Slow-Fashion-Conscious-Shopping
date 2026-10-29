@@ -2,7 +2,7 @@
 {% load static format_tags %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'product_catalog/phase2.css' %}">{% endblock %}
 {% block content %}
-<section class="pc-page pc-catalog">
+<section data-wishlist-json="{% url 'product_catalog:wishlist_json' %}" data-json-url="{% url 'product_catalog:katalog_json' %}" class="pc-page pc-catalog">
   <header class="pc-heading">
     <h1>Katalog</h1>
     <div class="pc-heading-actions"><span class="pc-muted">{{ page_obj.paginator.count }} produk</span>
@@ -80,13 +80,13 @@
 
         <div class="pc-grid pc-catalog-grid">
           {% for product in products %}
-            <article class="pc-card">
+            <article data-product-id="{{ product.pk }}" class="pc-card">
               <div class="pc-media">
                 {% with image=product.images.all|first %}
                   {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.name }}" loading="lazy">{% else %}<span class="pc-no-image">Belum ada foto</span>{% endif %}
                 {% endwith %}
                 {% if user.is_authenticated %}
-                  <form method="post" action="{% url 'product_catalog:toggle_wishlist' product.pk %}">
+                  <form data-wishlist-toggle method="post" action="{% url 'product_catalog:toggle_wishlist' product.pk %}">
                     {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
                     <button class="pc-heart {% if product.pk in wishlist_product_ids %}pc-saved{% endif %}" type="submit" aria-label="{% if product.pk in wishlist_product_ids %}Hapus dari wishlist{% else %}Simpan ke wishlist{% endif %}" aria-pressed="{% if product.pk in wishlist_product_ids %}true{% else %}false{% endif %}">
                       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
@@ -137,3 +137,4 @@
   </div>
 </section>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'product_catalog/phase3.js' %}" defer></script>{% endblock %}
