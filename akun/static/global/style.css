@@ -905,3 +905,15 @@ footer a:hover { opacity: 0.7; }
 .ps-thumbnail { margin-bottom: 30px; }
 .pc-card .cart-slot button { color: #fff; }
 .pc-card .cart-slot button.btn-outline { color: #1a1a1a; }
+
+.pd-actions .cart-slot .btn-primary,
+.pd-actions .cart-slot .btn-outline,
+.pd-actions .btn-outline {
+  padding: 14px 22px;
+  font-size: .8rem;
+  margin: 0;
+  line-height: 1.2;
+}
+.detail-actions { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+.detail-actions .cart-slot { margin: 0; display: flex; }
+.detail-actions button, .detail-actions a.btn-primary, .detail-actions a.btn-outline { padding: 14px 22px !important; font-size: .8rem !important; line-height: 1.2; margin: 0; }
