@@ -5,3 +5,9 @@ __pycache__/
 .env
 .vscode/
 staticfiles/sanitize.py
+html.txt
+kode.txt
+kode2.txt
+kode3.txt
+struktur.txt
+media/
