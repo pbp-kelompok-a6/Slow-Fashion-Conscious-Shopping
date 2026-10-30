@@ -8,15 +8,34 @@
   <title>{% block title %}LaPAKAIAN{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'global/style.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'pesanan/pesanan.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
 <script src="{% static 'js/utils.js' %}" defer></script>
+<style>
+  @media (max-width: 767px) {
+    .navbar { flex-wrap: wrap; }
+    .navbar .nav-links { width: 100%; }
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var b = document.getElementById("nav-burger");
+    var m = document.getElementById("nav-links-main");
+    if (!b || !m) return;
+    b.addEventListener("click", function () {
+      ["d-none", "d-flex", "flex-column"].forEach(function (c) { m.classList.toggle(c); });
+    });
+  });
+</script>
 <body>
  <nav class="navbar">
   <a href="{% url 'landing' %}" class="logo">LaPAKAIAN</a>
-  <div class="nav-links">
+    <button type="button" id="nav-burger" class="btn-outline d-md-none" aria-label="Buka menu">☰</button>
+    <div class="nav-links d-none d-md-flex" id="nav-links-main">
     <a href="{% url 'product_catalog:katalog' %}">Katalog</a>
     <div class="nav-dropdown">
   <button type="button" class="nav-dropdown-toggle" aria-expanded="false">Kategori ▾</button>
@@ -43,7 +62,7 @@
   </div>
 </nav>
   {% if messages %}<div class="messages" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
-  <main>
+  <main class="container-fluid p-0">
     {% block content %}{% endblock %}
   </main>
   <div id="pesanan-config" hidden data-user-id="{{ user.pk|default:'' }}" data-login="{% url 'akun:login' %}" data-cart-api="{% url 'pesanan:cart' %}" data-add-api="{% url 'pesanan:cart_add' %}" data-remove-api="{% url 'pesanan:cart_remove' %}" data-checkout-api="{% url 'pesanan:checkout' %}" data-cart-page="{% url 'pesanan:cart_page' %}" data-order-page="{% url 'pesanan:purchases_page' %}" data-success-url="{% url 'pesanan:success_page' 0 %}">{% csrf_token %}</div>

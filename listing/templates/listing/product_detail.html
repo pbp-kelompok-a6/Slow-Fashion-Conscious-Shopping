@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static format_tags pesanan_tags wishlist_tags %}
+{% load static format_tags pesanan_tags wishlist_tags size_chart_tags %}
 {% block title %}{{ product.name }} · LaPAKAIAN{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'listing/listing.css' %}">{% endblock %}
 
@@ -75,7 +75,21 @@
                 <p class="meta">Kategori: {{ product.get_category_display }}</p>
             </div>
 
-
+            {% size_chart_for product.brand as sc %}
+                {% if sc.rows %}
+                <div class="detail-desc">
+                    <h2 class="detail-subtitle">Size Chart {{ product.brand }}</h2>
+                    <table style="width:100%;border-collapse:collapse">
+                        <tr><th align="left">Size</th><th align="left">Dada (cm)</th><th align="left">Panjang (cm)</th></tr>
+                        {% for r in sc.rows %}
+                        <tr{% if r.size == product.size %} style="font-weight:700"{% endif %}>
+                            <td>{{ r.size }}</td><td>{{ r.chest_cm }}</td><td>{{ r.length_cm }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <p class="meta">Sumber data: {{ sc.source }}</p>
+                </div>
+                {% endif %}
             {% if product.seller.store %}<a href="{% url 'profil_toko:detail' product.seller.username %}" class="store-link">
                 <span class="avatar">{{ product.seller.store.name|default:product.seller.username|first }}</span>
                 <span class="store-link-text">
