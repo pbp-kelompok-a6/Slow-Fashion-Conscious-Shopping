@@ -56,4 +56,4 @@ class GuardTests(Fixtures, TestCase):
                 user.delete()
         self.assertEqual(Order.objects.count(), 1)
         self.client.force_login(self.other)
-        self.assertEqual(self.client.post(reverse("akun:hapus_akun")).status_code, 302)
+        self.assertEqual(self.client.post(reverse("akun:hapus_akun")).status_code, 200)

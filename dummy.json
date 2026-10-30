@@ -1,0 +1,1893 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "pbp",
+      "first_name": "",
+      "last_name": "",
+      "email": "user1@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-09-30T00:38:21.668Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan",
+      "first_name": "",
+      "last_name": "",
+      "email": "user2@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-26T08:13:22.768Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan1",
+      "first_name": "",
+      "last_name": "",
+      "email": "user3@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-28T00:41:31.055Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan2",
+      "first_name": "",
+      "last_name": "",
+      "email": "user4@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-28T02:16:12.999Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan4",
+      "first_name": "",
+      "last_name": "",
+      "email": "user7@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T09:26:33.558Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan6",
+      "first_name": "",
+      "last_name": "",
+      "email": "user8@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T09:35:14.458Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "seller1",
+      "first_name": "",
+      "last_name": "",
+      "email": "user9@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:28.894Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 10,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "seller2",
+      "first_name": "",
+      "last_name": "",
+      "email": "user10@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:29.700Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 11,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "seller3",
+      "first_name": "",
+      "last_name": "",
+      "email": "user11@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:30.484Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 12,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "seller4",
+      "first_name": "",
+      "last_name": "",
+      "email": "user12@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:31.241Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 13,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "seller5",
+      "first_name": "",
+      "last_name": "",
+      "email": "user13@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:31.696Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 14,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "buyer1",
+      "first_name": "",
+      "last_name": "",
+      "email": "user14@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:32.177Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 15,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "buyer2",
+      "first_name": "",
+      "last_name": "",
+      "email": "user15@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T17:38:32.692Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 16,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan10",
+      "first_name": "",
+      "last_name": "",
+      "email": "user16@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T18:07:43.577Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 17,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$sa9MG9lBMQM1ZD2Bpo5Hs1$OBiCC7BJdigqzN6zl9jmyk/q//UixVror+fvdGVR1SI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "burhan11",
+      "first_name": "",
+      "last_name": "",
+      "email": "user17@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-10-29T20:04:11.799Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-09-30T00:38:23.254Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "is_seller": true,
+      "bio": "jualan baju",
+      "created_at": "2026-10-26T08:13:24.132Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "is_seller": true,
+      "bio": "halo, ini toko burhan di Depok",
+      "created_at": "2026-10-28T00:41:32.789Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "is_seller": false,
+      "bio": "saya bukan kahnyfpah",
+      "created_at": "2026-10-28T02:16:14.802Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 5,
+    "fields": {
+      "user": 7,
+      "is_seller": false,
+      "bio": "",
+      "created_at": "2026-10-29T09:26:36.025Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 6,
+    "fields": {
+      "user": 8,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-10-29T09:35:16.816Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 7,
+    "fields": {
+      "user": 9,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:28.898Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 8,
+    "fields": {
+      "user": 10,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:29.701Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 9,
+    "fields": {
+      "user": 11,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:30.484Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 10,
+    "fields": {
+      "user": 12,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:31.241Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 11,
+    "fields": {
+      "user": 13,
+      "is_seller": true,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:31.697Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 12,
+    "fields": {
+      "user": 14,
+      "is_seller": false,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:32.178Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 13,
+    "fields": {
+      "user": 15,
+      "is_seller": false,
+      "bio": "",
+      "created_at": "2026-10-29T17:38:32.693Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 14,
+    "fields": {
+      "user": 16,
+      "is_seller": false,
+      "bio": "",
+      "created_at": "2026-10-29T18:07:45.202Z"
+    }
+  },
+  {
+    "model": "akun.profile",
+    "pk": 15,
+    "fields": {
+      "user": 17,
+      "is_seller": false,
+      "bio": "",
+      "created_at": "2026-10-29T20:04:13.390Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 2,
+    "fields": {
+      "seller": 3,
+      "name": "burhan",
+      "brand": "x",
+      "description": "bgus bgt",
+      "category": "bawahan",
+      "size": "M",
+      "condition": "new",
+      "price": "69000.00",
+      "status": "sold",
+      "created_at": "2026-10-29T15:20:07.723Z",
+      "updated_at": "2026-10-29T18:28:55.806Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 3,
+    "fields": {
+      "seller": 9,
+      "name": "Linen blazer krem",
+      "brand": "Uniqlo",
+      "description": "Blazer linen ringan warna krem, cocok untuk kerja atau kuliah. Baru dipakai dua kali, tanpa noda.",
+      "category": "outerwear",
+      "size": "M",
+      "condition": "like_new",
+      "price": "85000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.368Z",
+      "updated_at": "2026-10-29T17:38:33.368Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 4,
+    "fields": {
+      "seller": 9,
+      "name": "Kemeja oversized putih",
+      "brand": "Cotton On",
+      "description": "Kemeja katun potongan oversized, bahan adem dan tidak menerawang.",
+      "category": "atasan",
+      "size": "M",
+      "condition": "like_new",
+      "price": "55000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.371Z",
+      "updated_at": "2026-10-29T17:38:33.371Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 5,
+    "fields": {
+      "seller": 9,
+      "name": "Trench coat beige",
+      "brand": "Zara",
+      "description": "Trench coat klasik dengan sabuk, ada sedikit tanda pemakaian di ujung lengan.",
+      "category": "outerwear",
+      "size": "M",
+      "condition": "good",
+      "price": "180000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.372Z",
+      "updated_at": "2026-10-29T17:38:33.372Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 6,
+    "fields": {
+      "seller": 9,
+      "name": "Cardigan rajut abu",
+      "brand": "Uniqlo",
+      "description": "Cardigan rajut tebal, kancing lengkap, nyaman untuk ruangan ber-AC.",
+      "category": "atasan",
+      "size": "L",
+      "condition": "good",
+      "price": "70000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.374Z",
+      "updated_at": "2026-10-29T17:38:33.374Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 7,
+    "fields": {
+      "seller": 9,
+      "name": "Blazer hitam slim fit",
+      "brand": "Zara",
+      "description": "Blazer hitam formal, jahitan rapi, cocok untuk presentasi atau wawancara.",
+      "category": "outerwear",
+      "size": "M",
+      "condition": "like_new",
+      "price": "90000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.376Z",
+      "updated_at": "2026-10-29T17:38:33.376Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 8,
+    "fields": {
+      "seller": 9,
+      "name": "Overshirt flanel kotak",
+      "brand": "Cotton On",
+      "description": "Overshirt flanel motif kotak merah, bisa dipakai sebagai luaran.",
+      "category": "atasan",
+      "size": "M",
+      "condition": "good",
+      "price": "65000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.377Z",
+      "updated_at": "2026-10-29T17:38:33.377Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 9,
+    "fields": {
+      "seller": 9,
+      "name": "Parka olive",
+      "brand": "H&M",
+      "description": "Parka hijau olive dengan hoodie, resleting dan kancing berfungsi baik.",
+      "category": "outerwear",
+      "size": "L",
+      "condition": "good",
+      "price": "150000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.378Z",
+      "updated_at": "2026-10-29T17:38:33.378Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 10,
+    "fields": {
+      "seller": 9,
+      "name": "Wool coat charcoal",
+      "brand": "Mango",
+      "description": "Mantel wol abu tua, masih ada label, belum pernah dipakai.",
+      "category": "outerwear",
+      "size": "M",
+      "condition": "new",
+      "price": "220000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.379Z",
+      "updated_at": "2026-10-29T17:38:33.379Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 11,
+    "fields": {
+      "seller": 9,
+      "name": "Kemeja linen biru muda",
+      "brand": "Uniqlo",
+      "description": "Kemeja linen lengan panjang, warna biru muda yang mudah dipadukan.",
+      "category": "atasan",
+      "size": "L",
+      "condition": "good",
+      "price": "60000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.380Z",
+      "updated_at": "2026-10-29T17:38:33.380Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 12,
+    "fields": {
+      "seller": 9,
+      "name": "Turtleneck rajut hitam",
+      "brand": "H&M",
+      "description": "Turtleneck rajut tipis, elastis, warna hitam masih pekat.",
+      "category": "atasan",
+      "size": "S",
+      "condition": "like_new",
+      "price": "50000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.382Z",
+      "updated_at": "2026-10-29T17:38:33.382Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 13,
+    "fields": {
+      "seller": 10,
+      "name": "501 jeans light wash",
+      "brand": "Levi's",
+      "description": "Jeans 501 original warna light wash, potongan straight.",
+      "category": "bawahan",
+      "size": "30",
+      "condition": "good",
+      "price": "120000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.383Z",
+      "updated_at": "2026-10-29T17:38:33.383Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 14,
+    "fields": {
+      "seller": 10,
+      "name": "Denim jacket washed",
+      "brand": "Levi's",
+      "description": "Jaket denim washed, semua kancing lengkap, cocok gaya kasual.",
+      "category": "outerwear",
+      "size": "M",
+      "condition": "good",
+      "price": "110000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.384Z",
+      "updated_at": "2026-10-29T17:38:33.384Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 15,
+    "fields": {
+      "seller": 10,
+      "name": "Wide leg trousers krem",
+      "brand": "H&M",
+      "description": "Celana kulot wide leg berpinggang karet, bahan jatuh dan tidak kusut.",
+      "category": "bawahan",
+      "size": "L",
+      "condition": "like_new",
+      "price": "60000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.385Z",
+      "updated_at": "2026-10-29T17:38:33.385Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 16,
+    "fields": {
+      "seller": 10,
+      "name": "Kaos putih basic",
+      "brand": "Uniqlo",
+      "description": "Kaos katun putih polos, kerah tidak melar, sudah dicuci bersih.",
+      "category": "atasan",
+      "size": "M",
+      "condition": "good",
+      "price": "30000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.386Z",
+      "updated_at": "2026-10-29T17:38:33.386Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 17,
+    "fields": {
+      "seller": 10,
+      "name": "Ribbed knit top hitam",
+      "brand": "Zara",
+      "description": "Atasan rajut ribbed lengan pendek, pas di badan.",
+      "category": "atasan",
+      "size": "S",
+      "condition": "good",
+      "price": "45000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.387Z",
+      "updated_at": "2026-10-29T17:38:33.387Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 18,
+    "fields": {
+      "seller": 10,
+      "name": "Celana chino khaki",
+      "brand": "Uniqlo",
+      "description": "Chino khaki slim fit, cocok untuk kuliah maupun acara semi formal.",
+      "category": "bawahan",
+      "size": "32",
+      "condition": "good",
+      "price": "75000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.388Z",
+      "updated_at": "2026-10-29T17:38:33.388Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 19,
+    "fields": {
+      "seller": 10,
+      "name": "Rok denim A-line",
+      "brand": "Pull&Bear",
+      "description": "Rok denim A-line selutut, resleting depan berfungsi baik.",
+      "category": "bawahan",
+      "size": "M",
+      "condition": "like_new",
+      "price": "65000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.390Z",
+      "updated_at": "2026-10-29T17:38:33.390Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 20,
+    "fields": {
+      "seller": 10,
+      "name": "Hoodie abu polos",
+      "brand": "H&M",
+      "description": "Hoodie fleece tebal tanpa sablon, kantong depan masih rapi.",
+      "category": "atasan",
+      "size": "L",
+      "condition": "good",
+      "price": "80000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.391Z",
+      "updated_at": "2026-10-29T17:38:33.391Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 21,
+    "fields": {
+      "seller": 10,
+      "name": "Mom jeans dark wash",
+      "brand": "Levi's",
+      "description": "Mom jeans high waist warna gelap, belum pernah dipermak.",
+      "category": "bawahan",
+      "size": "28",
+      "condition": "good",
+      "price": "130000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.392Z",
+      "updated_at": "2026-10-29T17:38:33.392Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 22,
+    "fields": {
+      "seller": 10,
+      "name": "Bomber jacket olive",
+      "brand": "H&M",
+      "description": "Bomber jacket hijau olive dengan lapisan dalam oranye.",
+      "category": "outerwear",
+      "size": "M",
+      "condition": "good",
+      "price": "130000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.393Z",
+      "updated_at": "2026-10-29T17:38:33.393Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 23,
+    "fields": {
+      "seller": 11,
+      "name": "Chuck 70 hitam",
+      "brand": "Converse",
+      "description": "Converse Chuck 70 high top, sol masih tebal, ada sedikit kotor di bagian karet.",
+      "category": "sepatu",
+      "size": "EU 39",
+      "condition": "good",
+      "price": "250000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.395Z",
+      "updated_at": "2026-10-29T17:38:33.395Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 24,
+    "fields": {
+      "seller": 11,
+      "name": "Stan Smith putih hijau",
+      "brand": "Adidas",
+      "description": "Adidas Stan Smith kulit putih dengan aksen hijau, sudah dicuci.",
+      "category": "sepatu",
+      "size": "EU 41",
+      "condition": "good",
+      "price": "300000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.396Z",
+      "updated_at": "2026-10-29T17:38:33.396Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 25,
+    "fields": {
+      "seller": 11,
+      "name": "Air Force 1 putih",
+      "brand": "Nike",
+      "description": "Nike Air Force 1 putih, ada lipatan di bagian depan, sol masih kuat.",
+      "category": "sepatu",
+      "size": "EU 42",
+      "condition": "fair",
+      "price": "350000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.398Z",
+      "updated_at": "2026-10-29T17:38:33.398Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 26,
+    "fields": {
+      "seller": 11,
+      "name": "Old Skool hitam putih",
+      "brand": "Vans",
+      "description": "Vans Old Skool klasik, tali dan insole masih bagus.",
+      "category": "sepatu",
+      "size": "EU 40",
+      "condition": "good",
+      "price": "280000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.400Z",
+      "updated_at": "2026-10-29T17:38:33.400Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 27,
+    "fields": {
+      "seller": 11,
+      "name": "Samba OG putih",
+      "brand": "Adidas",
+      "description": "Adidas Samba OG, baru dipakai tiga kali, lengkap dengan box.",
+      "category": "sepatu",
+      "size": "EU 40",
+      "condition": "like_new",
+      "price": "650000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.401Z",
+      "updated_at": "2026-10-29T17:38:33.401Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 28,
+    "fields": {
+      "seller": 11,
+      "name": "Loafers kulit coklat",
+      "brand": "Pedro",
+      "description": "Loafers kulit asli warna coklat, cocok untuk acara formal.",
+      "category": "sepatu",
+      "size": "EU 41",
+      "condition": "good",
+      "price": "220000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.402Z",
+      "updated_at": "2026-10-29T17:38:33.402Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 29,
+    "fields": {
+      "seller": 11,
+      "name": "Sandal gunung hitam",
+      "brand": "Eiger",
+      "description": "Sandal gunung dengan strap perekat, nyaman untuk jalan jauh.",
+      "category": "sepatu",
+      "size": "EU 42",
+      "condition": "good",
+      "price": "120000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.403Z",
+      "updated_at": "2026-10-29T17:38:33.403Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 30,
+    "fields": {
+      "seller": 11,
+      "name": "Slip-on kanvas krem",
+      "brand": "Vans",
+      "description": "Slip-on kanvas krem, warna sedikit pudar tapi masih layak pakai.",
+      "category": "sepatu",
+      "size": "EU 38",
+      "condition": "fair",
+      "price": "150000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.405Z",
+      "updated_at": "2026-10-29T17:38:33.405Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 31,
+    "fields": {
+      "seller": 11,
+      "name": "Ventela Public low hitam",
+      "brand": "Ventela",
+      "description": "Sneakers lokal Ventela Public low, jarang dipakai.",
+      "category": "sepatu",
+      "size": "EU 41",
+      "condition": "like_new",
+      "price": "180000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.406Z",
+      "updated_at": "2026-10-29T17:38:33.406Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 32,
+    "fields": {
+      "seller": 11,
+      "name": "Ankle boots hitam",
+      "brand": "Zara",
+      "description": "Ankle boots hak rendah dengan resleting samping.",
+      "category": "sepatu",
+      "size": "EU 38",
+      "condition": "good",
+      "price": "260000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.408Z",
+      "updated_at": "2026-10-29T17:38:33.408Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 33,
+    "fields": {
+      "seller": 12,
+      "name": "Midi dress motif bunga",
+      "brand": "Mango",
+      "description": "Midi dress motif bunga kecil, masih ada label.",
+      "category": "dress",
+      "size": "S",
+      "condition": "new",
+      "price": "150000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.409Z",
+      "updated_at": "2026-10-29T17:38:33.409Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 34,
+    "fields": {
+      "seller": 12,
+      "name": "Slip dress satin hijau",
+      "brand": "Zara",
+      "description": "Slip dress satin hijau emerald, tali bahu bisa diatur.",
+      "category": "dress",
+      "size": "M",
+      "condition": "like_new",
+      "price": "140000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.410Z",
+      "updated_at": "2026-10-29T17:38:33.410Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 35,
+    "fields": {
+      "seller": 12,
+      "name": "Kebaya modern putih",
+      "brand": "Lokal",
+      "description": "Kebaya modern brokat putih, cocok untuk wisuda atau kondangan.",
+      "category": "dress",
+      "size": "M",
+      "condition": "like_new",
+      "price": "175000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.411Z",
+      "updated_at": "2026-10-29T17:38:33.411Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 36,
+    "fields": {
+      "seller": 12,
+      "name": "Maxi dress linen terakota",
+      "brand": "H&M",
+      "description": "Maxi dress linen warna terakota dengan kancing depan.",
+      "category": "dress",
+      "size": "L",
+      "condition": "good",
+      "price": "120000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.412Z",
+      "updated_at": "2026-10-29T17:38:33.412Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 37,
+    "fields": {
+      "seller": 12,
+      "name": "Shirt dress denim",
+      "brand": "Uniqlo",
+      "description": "Shirt dress denim tipis, bisa dipakai dengan sabuk.",
+      "category": "dress",
+      "size": "M",
+      "condition": "good",
+      "price": "110000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.413Z",
+      "updated_at": "2026-10-29T17:38:33.413Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 38,
+    "fields": {
+      "seller": 12,
+      "name": "Rok plisket mocca",
+      "brand": "Lokal",
+      "description": "Rok plisket panjang warna mocca, pinggang karet.",
+      "category": "bawahan",
+      "size": "All size",
+      "condition": "good",
+      "price": "55000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.415Z",
+      "updated_at": "2026-10-29T17:38:33.415Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 39,
+    "fields": {
+      "seller": 12,
+      "name": "Blouse batik modern",
+      "brand": "Batik Keris",
+      "description": "Blouse batik motif modern, bahan katun halus.",
+      "category": "atasan",
+      "size": "M",
+      "condition": "like_new",
+      "price": "95000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.417Z",
+      "updated_at": "2026-10-29T17:38:33.417Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 40,
+    "fields": {
+      "seller": 12,
+      "name": "Dress rajut abu",
+      "brand": "Uniqlo",
+      "description": "Dress rajut abu selutut, hangat dan tidak gatal.",
+      "category": "dress",
+      "size": "S",
+      "condition": "good",
+      "price": "100000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.419Z",
+      "updated_at": "2026-10-29T17:38:33.419Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 41,
+    "fields": {
+      "seller": 12,
+      "name": "Rok midi satin hitam",
+      "brand": "Mango",
+      "description": "Rok midi satin hitam, jatuh dan berkilau lembut.",
+      "category": "bawahan",
+      "size": "S",
+      "condition": "like_new",
+      "price": "85000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.420Z",
+      "updated_at": "2026-10-29T17:38:33.420Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 42,
+    "fields": {
+      "seller": 12,
+      "name": "Wrap dress polkadot",
+      "brand": "Zara",
+      "description": "Wrap dress polkadot hitam putih dengan tali pinggang.",
+      "category": "dress",
+      "size": "M",
+      "condition": "good",
+      "price": "115000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.421Z",
+      "updated_at": "2026-10-29T17:38:33.421Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 43,
+    "fields": {
+      "seller": 13,
+      "name": "Tote bag kanvas natural",
+      "brand": "Lokal",
+      "description": "Tote bag kanvas tebal, muat laptop 14 inci.",
+      "category": "tas",
+      "size": "One size",
+      "condition": "good",
+      "price": "40000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.422Z",
+      "updated_at": "2026-10-29T17:38:33.422Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 44,
+    "fields": {
+      "seller": 13,
+      "name": "Ransel kulit coklat",
+      "brand": "Fossil",
+      "description": "Ransel kulit asli, resleting lancar, ada goresan halus.",
+      "category": "tas",
+      "size": "One size",
+      "condition": "good",
+      "price": "450000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.424Z",
+      "updated_at": "2026-10-29T17:38:33.424Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 45,
+    "fields": {
+      "seller": 13,
+      "name": "Sling bag nilon hitam",
+      "brand": "Uniqlo",
+      "description": "Sling bag nilon ringan dengan banyak kantong.",
+      "category": "tas",
+      "size": "One size",
+      "condition": "like_new",
+      "price": "120000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.426Z",
+      "updated_at": "2026-10-29T17:38:33.426Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 46,
+    "fields": {
+      "seller": 13,
+      "name": "Shoulder bag kulit hitam",
+      "brand": "Charles & Keith",
+      "description": "Shoulder bag kulit sintetis hitam, tali bisa dilepas.",
+      "category": "tas",
+      "size": "One size",
+      "condition": "good",
+      "price": "280000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.428Z",
+      "updated_at": "2026-10-29T17:38:33.428Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 47,
+    "fields": {
+      "seller": 13,
+      "name": "Topi baseball navy",
+      "brand": "New Era",
+      "description": "Topi baseball navy dengan strap belakang yang bisa diatur.",
+      "category": "aksesori",
+      "size": "One size",
+      "condition": "good",
+      "price": "90000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.430Z",
+      "updated_at": "2026-10-29T17:38:33.430Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 48,
+    "fields": {
+      "seller": 13,
+      "name": "Syal wol abu",
+      "brand": "H&M",
+      "description": "Syal wol lembut warna abu, panjang 180 cm.",
+      "category": "aksesori",
+      "size": "One size",
+      "condition": "like_new",
+      "price": "45000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.431Z",
+      "updated_at": "2026-10-29T17:38:33.431Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 49,
+    "fields": {
+      "seller": 13,
+      "name": "Sabuk kulit coklat",
+      "brand": "Levi's",
+      "description": "Sabuk kulit asli dengan gesper logam.",
+      "category": "aksesori",
+      "size": "90 cm",
+      "condition": "good",
+      "price": "70000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.432Z",
+      "updated_at": "2026-10-29T17:38:33.432Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 50,
+    "fields": {
+      "seller": 13,
+      "name": "Kacamata hitam aviator",
+      "brand": "Ray-Ban",
+      "description": "Kacamata aviator original lengkap dengan case.",
+      "category": "aksesori",
+      "size": "One size",
+      "condition": "good",
+      "price": "550000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.433Z",
+      "updated_at": "2026-10-29T17:38:33.433Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 51,
+    "fields": {
+      "seller": 13,
+      "name": "Jam tangan analog silver",
+      "brand": "Casio",
+      "description": "Jam tangan analog strap logam, baterai baru diganti.",
+      "category": "aksesori",
+      "size": "One size",
+      "condition": "good",
+      "price": "300000.00",
+      "status": "active",
+      "created_at": "2026-10-29T17:38:33.434Z",
+      "updated_at": "2026-10-29T17:38:33.434Z"
+    }
+  },
+  {
+    "model": "listing.product",
+    "pk": 52,
+    "fields": {
+      "seller": 13,
+      "name": "Beanie rajut krem",
+      "brand": "Cotton On",
+      "description": "Beanie rajut krem, masih ada label.",
+      "category": "aksesori",
+      "size": "One size",
+      "condition": "new",
+      "price": "35000.00",
+      "status": "sold",
+      "created_at": "2026-10-29T17:38:33.435Z",
+      "updated_at": "2026-10-29T20:05:06.330Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 3,
+    "fields": {
+      "product": 2,
+      "image": "product_images/clipart2355447_JDY7I1f.png",
+      "alt_text": "",
+      "created_at": "2026-10-29T15:20:07.744Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 4,
+    "fields": {
+      "product": 3,
+      "image": "product_images/dummy/01-linen-blazer-krem.jpg",
+      "alt_text": "Linen blazer krem",
+      "created_at": "2026-10-29T17:38:33.370Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 5,
+    "fields": {
+      "product": 4,
+      "image": "product_images/dummy/02-kemeja-oversized-putih.jpg",
+      "alt_text": "Kemeja oversized putih",
+      "created_at": "2026-10-29T17:38:33.372Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 6,
+    "fields": {
+      "product": 5,
+      "image": "product_images/dummy/03-trench-coat-beige.jpg",
+      "alt_text": "Trench coat beige",
+      "created_at": "2026-10-29T17:38:33.373Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 7,
+    "fields": {
+      "product": 6,
+      "image": "product_images/dummy/04-cardigan-rajut-abu.jpg",
+      "alt_text": "Cardigan rajut abu",
+      "created_at": "2026-10-29T17:38:33.375Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 8,
+    "fields": {
+      "product": 7,
+      "image": "product_images/dummy/05-blazer-hitam-slim-fit.jpg",
+      "alt_text": "Blazer hitam slim fit",
+      "created_at": "2026-10-29T17:38:33.376Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 9,
+    "fields": {
+      "product": 8,
+      "image": "product_images/dummy/06-overshirt-flanel-kotak.jpg",
+      "alt_text": "Overshirt flanel kotak",
+      "created_at": "2026-10-29T17:38:33.378Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 10,
+    "fields": {
+      "product": 9,
+      "image": "product_images/dummy/07-parka-olive.jpg",
+      "alt_text": "Parka olive",
+      "created_at": "2026-10-29T17:38:33.379Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 11,
+    "fields": {
+      "product": 10,
+      "image": "product_images/dummy/08-wool-coat-charcoal.jpg",
+      "alt_text": "Wool coat charcoal",
+      "created_at": "2026-10-29T17:38:33.380Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 12,
+    "fields": {
+      "product": 11,
+      "image": "product_images/dummy/09-kemeja-linen-biru-muda.jpg",
+      "alt_text": "Kemeja linen biru muda",
+      "created_at": "2026-10-29T17:38:33.381Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 13,
+    "fields": {
+      "product": 12,
+      "image": "product_images/dummy/10-turtleneck-rajut-hitam.jpg",
+      "alt_text": "Turtleneck rajut hitam",
+      "created_at": "2026-10-29T17:38:33.382Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 14,
+    "fields": {
+      "product": 13,
+      "image": "product_images/dummy/11-501-jeans-light-wash.jpg",
+      "alt_text": "501 jeans light wash",
+      "created_at": "2026-10-29T17:38:33.384Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 15,
+    "fields": {
+      "product": 14,
+      "image": "product_images/dummy/12-denim-jacket-washed.jpg",
+      "alt_text": "Denim jacket washed",
+      "created_at": "2026-10-29T17:38:33.385Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 16,
+    "fields": {
+      "product": 16,
+      "image": "product_images/dummy/14-kaos-putih-basic.jpg",
+      "alt_text": "Kaos putih basic",
+      "created_at": "2026-10-29T17:38:33.386Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 17,
+    "fields": {
+      "product": 17,
+      "image": "product_images/dummy/15-ribbed-knit-top-hitam.jpg",
+      "alt_text": "Ribbed knit top hitam",
+      "created_at": "2026-10-29T17:38:33.387Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 18,
+    "fields": {
+      "product": 18,
+      "image": "product_images/dummy/16-celana-chino-khaki.jpg",
+      "alt_text": "Celana chino khaki",
+      "created_at": "2026-10-29T17:38:33.389Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 19,
+    "fields": {
+      "product": 19,
+      "image": "product_images/dummy/17-rok-denim-a-line.jpg",
+      "alt_text": "Rok denim A-line",
+      "created_at": "2026-10-29T17:38:33.391Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 20,
+    "fields": {
+      "product": 20,
+      "image": "product_images/dummy/18-hoodie-abu-polos.jpg",
+      "alt_text": "Hoodie abu polos",
+      "created_at": "2026-10-29T17:38:33.392Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 21,
+    "fields": {
+      "product": 21,
+      "image": "product_images/dummy/19-mom-jeans-dark-wash.jpg",
+      "alt_text": "Mom jeans dark wash",
+      "created_at": "2026-10-29T17:38:33.393Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 22,
+    "fields": {
+      "product": 22,
+      "image": "product_images/dummy/20-bomber-jacket-olive.jpg",
+      "alt_text": "Bomber jacket olive",
+      "created_at": "2026-10-29T17:38:33.394Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 23,
+    "fields": {
+      "product": 23,
+      "image": "product_images/dummy/21-chuck-70-hitam.jpg",
+      "alt_text": "Chuck 70 hitam",
+      "created_at": "2026-10-29T17:38:33.395Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 24,
+    "fields": {
+      "product": 24,
+      "image": "product_images/dummy/22-stan-smith-putih-hijau.jpg",
+      "alt_text": "Stan Smith putih hijau",
+      "created_at": "2026-10-29T17:38:33.398Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 25,
+    "fields": {
+      "product": 25,
+      "image": "product_images/dummy/23-air-force-1-putih.jpg",
+      "alt_text": "Air Force 1 putih",
+      "created_at": "2026-10-29T17:38:33.399Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 26,
+    "fields": {
+      "product": 26,
+      "image": "product_images/dummy/24-old-skool-hitam-putih.jpg",
+      "alt_text": "Old Skool hitam putih",
+      "created_at": "2026-10-29T17:38:33.401Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 27,
+    "fields": {
+      "product": 27,
+      "image": "product_images/dummy/25-samba-og-putih.jpg",
+      "alt_text": "Samba OG putih",
+      "created_at": "2026-10-29T17:38:33.402Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 28,
+    "fields": {
+      "product": 28,
+      "image": "product_images/dummy/26-loafers-kulit-coklat.jpg",
+      "alt_text": "Loafers kulit coklat",
+      "created_at": "2026-10-29T17:38:33.403Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 29,
+    "fields": {
+      "product": 29,
+      "image": "product_images/dummy/27-sandal-gunung-hitam.jpg",
+      "alt_text": "Sandal gunung hitam",
+      "created_at": "2026-10-29T17:38:33.404Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 30,
+    "fields": {
+      "product": 30,
+      "image": "product_images/dummy/28-slip-on-kanvas-krem.jpg",
+      "alt_text": "Slip-on kanvas krem",
+      "created_at": "2026-10-29T17:38:33.405Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 31,
+    "fields": {
+      "product": 31,
+      "image": "product_images/dummy/29-ventela-public-low-hitam.jpg",
+      "alt_text": "Ventela Public low hitam",
+      "created_at": "2026-10-29T17:38:33.407Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 32,
+    "fields": {
+      "product": 32,
+      "image": "product_images/dummy/30-ankle-boots-hitam.jpg",
+      "alt_text": "Ankle boots hitam",
+      "created_at": "2026-10-29T17:38:33.408Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 33,
+    "fields": {
+      "product": 33,
+      "image": "product_images/dummy/31-midi-dress-motif-bunga.jpg",
+      "alt_text": "Midi dress motif bunga",
+      "created_at": "2026-10-29T17:38:33.409Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 34,
+    "fields": {
+      "product": 34,
+      "image": "product_images/dummy/32-slip-dress-satin-hijau.jpg",
+      "alt_text": "Slip dress satin hijau",
+      "created_at": "2026-10-29T17:38:33.411Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 35,
+    "fields": {
+      "product": 35,
+      "image": "product_images/dummy/33-kebaya-modern-putih.jpg",
+      "alt_text": "Kebaya modern putih",
+      "created_at": "2026-10-29T17:38:33.412Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 36,
+    "fields": {
+      "product": 36,
+      "image": "product_images/dummy/34-maxi-dress-linen-terakota.jpg",
+      "alt_text": "Maxi dress linen terakota",
+      "created_at": "2026-10-29T17:38:33.413Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 37,
+    "fields": {
+      "product": 37,
+      "image": "product_images/dummy/35-shirt-dress-denim.jpg",
+      "alt_text": "Shirt dress denim",
+      "created_at": "2026-10-29T17:38:33.415Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 38,
+    "fields": {
+      "product": 38,
+      "image": "product_images/dummy/36-rok-plisket-mocca.jpg",
+      "alt_text": "Rok plisket mocca",
+      "created_at": "2026-10-29T17:38:33.416Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 39,
+    "fields": {
+      "product": 39,
+      "image": "product_images/dummy/37-blouse-batik-modern.jpg",
+      "alt_text": "Blouse batik modern",
+      "created_at": "2026-10-29T17:38:33.418Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 40,
+    "fields": {
+      "product": 40,
+      "image": "product_images/dummy/38-dress-rajut-abu.jpg",
+      "alt_text": "Dress rajut abu",
+      "created_at": "2026-10-29T17:38:33.420Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 41,
+    "fields": {
+      "product": 41,
+      "image": "product_images/dummy/39-rok-midi-satin-hitam.jpg",
+      "alt_text": "Rok midi satin hitam",
+      "created_at": "2026-10-29T17:38:33.421Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 42,
+    "fields": {
+      "product": 42,
+      "image": "product_images/dummy/40-wrap-dress-polkadot.jpg",
+      "alt_text": "Wrap dress polkadot",
+      "created_at": "2026-10-29T17:38:33.422Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 43,
+    "fields": {
+      "product": 43,
+      "image": "product_images/dummy/41-tote-bag-kanvas-natural.jpg",
+      "alt_text": "Tote bag kanvas natural",
+      "created_at": "2026-10-29T17:38:33.423Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 44,
+    "fields": {
+      "product": 44,
+      "image": "product_images/dummy/42-ransel-kulit-coklat.jpg",
+      "alt_text": "Ransel kulit coklat",
+      "created_at": "2026-10-29T17:38:33.425Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 45,
+    "fields": {
+      "product": 45,
+      "image": "product_images/dummy/43-sling-bag-nilon-hitam.jpg",
+      "alt_text": "Sling bag nilon hitam",
+      "created_at": "2026-10-29T17:38:33.427Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 46,
+    "fields": {
+      "product": 46,
+      "image": "product_images/dummy/44-shoulder-bag-kulit-hitam.jpg",
+      "alt_text": "Shoulder bag kulit hitam",
+      "created_at": "2026-10-29T17:38:33.429Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 47,
+    "fields": {
+      "product": 47,
+      "image": "product_images/dummy/45-topi-baseball-navy.jpg",
+      "alt_text": "Topi baseball navy",
+      "created_at": "2026-10-29T17:38:33.430Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 48,
+    "fields": {
+      "product": 48,
+      "image": "product_images/dummy/46-syal-wol-abu.jpg",
+      "alt_text": "Syal wol abu",
+      "created_at": "2026-10-29T17:38:33.432Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 49,
+    "fields": {
+      "product": 49,
+      "image": "product_images/dummy/47-sabuk-kulit-coklat.jpg",
+      "alt_text": "Sabuk kulit coklat",
+      "created_at": "2026-10-29T17:38:33.433Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 50,
+    "fields": {
+      "product": 50,
+      "image": "product_images/dummy/48-kacamata-hitam-aviator.jpg",
+      "alt_text": "Kacamata hitam aviator",
+      "created_at": "2026-10-29T17:38:33.434Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 51,
+    "fields": {
+      "product": 51,
+      "image": "product_images/dummy/49-jam-tangan-analog-silver.jpg",
+      "alt_text": "Jam tangan analog silver",
+      "created_at": "2026-10-29T17:38:33.435Z"
+    }
+  },
+  {
+    "model": "listing.productimage",
+    "pk": 52,
+    "fields": {
+      "product": 52,
+      "image": "product_images/dummy/50-beanie-rajut-krem.jpg",
+      "alt_text": "Beanie rajut krem",
+      "created_at": "2026-10-29T17:38:33.436Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 1,
+    "fields": {
+      "owner": 3,
+      "name": "burhan",
+      "city": "depok",
+      "description": "g",
+      "whatsapp_number": "081234567890",
+      "created_at": "2026-10-28T19:12:13.368Z",
+      "updated_at": "2026-10-28T19:12:13.368Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 2,
+    "fields": {
+      "owner": 8,
+      "name": "burhan",
+      "city": "depok",
+      "description": "hai",
+      "whatsapp_number": "081234567890",
+      "created_at": "2026-10-29T09:48:41.037Z",
+      "updated_at": "2026-10-29T19:58:54.250Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 3,
+    "fields": {
+      "owner": 9,
+      "name": "Lemari Kedua",
+      "city": "Depok",
+      "description": "",
+      "whatsapp_number": "081234567801",
+      "created_at": "2026-10-29T17:38:33.363Z",
+      "updated_at": "2026-10-29T17:38:33.363Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 4,
+    "fields": {
+      "owner": 10,
+      "name": "Preloved Pojok",
+      "city": "Jakarta",
+      "description": "",
+      "whatsapp_number": "081234567802",
+      "created_at": "2026-10-29T17:38:33.364Z",
+      "updated_at": "2026-10-29T17:38:33.364Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 5,
+    "fields": {
+      "owner": 11,
+      "name": "Rak Sepatu Bekas",
+      "city": "Bandung",
+      "description": "",
+      "whatsapp_number": "081234567803",
+      "created_at": "2026-10-29T17:38:33.364Z",
+      "updated_at": "2026-10-29T17:38:33.364Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 6,
+    "fields": {
+      "owner": 12,
+      "name": "Butik Kedua",
+      "city": "Yogyakarta",
+      "description": "",
+      "whatsapp_number": "081234567804",
+      "created_at": "2026-10-29T17:38:33.365Z",
+      "updated_at": "2026-10-29T17:38:33.365Z"
+    }
+  },
+  {
+    "model": "profil_toko.store",
+    "pk": 7,
+    "fields": {
+      "owner": 13,
+      "name": "Tas & Teman",
+      "city": "Surabaya",
+      "description": "",
+      "whatsapp_number": "081234567805",
+      "created_at": "2026-10-29T17:38:33.365Z",
+      "updated_at": "2026-10-29T17:38:33.365Z"
+    }
+  },
+  {
+    "model": "ulasan.review",
+    "pk": "70b225b6-26a1-496f-be9e-e895ed2bb206",
+    "fields": {
+      "product": 50,
+      "seller": null,
+      "user": 17,
+      "rating": 4,
+      "komentar": "halo",
+      "created_at": "2026-10-29T20:11:40.097Z",
+      "updated_at": "2026-10-29T20:11:40.097Z"
+    }
+  }
+]

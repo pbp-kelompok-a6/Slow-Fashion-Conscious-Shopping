@@ -17,7 +17,7 @@ class Fixtures:
         self.seller = User.objects.create_user("seller4")
         self.seller2 = User.objects.create_user("seller24")
         for user in [self.buyer, self.other, self.seller, self.seller2]:
-            Profile.objects.get_or_create(user=user, defaults={"is_seller": user in [self.seller, self.seller2]})
+           Profile.objects.update_or_create(user=user, defaults={"is_seller": user in [self.seller, self.seller2]})
         self.p = self.product(self.seller, "Linen", "100.25")
         self.p2 = self.product(self.seller2, "Denim", "200.50")
 

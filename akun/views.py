@@ -3,13 +3,14 @@ from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_GET, require_POST
 from .forms import RegisterForm, ProfileForm
 from .models import Profile
 from listing.models import Product
+from django.db.models import ProtectedError
 
 LANDING_CATEGORIES = ["atasan", "bawahan", "outerwear", "dress"]
 
@@ -106,13 +107,19 @@ def edit_profil(request):
         "message": "Bio berhasil disimpan.",
         "bio": profile.bio,
     })
-
 @login_required
 @require_POST
 def hapus_akun(request):
     user = request.user
+    try:
+        user.delete()
+    except ProtectedError:
+        return JsonResponse({
+            "success": False,
+            "code": "order_history_exists",
+            "message": "Akun tidak dapat dihapus karena masih memiliki riwayat pesanan.",
+        }, status=409)
     auth_logout(request)
-    user.delete()
     return JsonResponse({
         "success": True,
         "message": "Akun kamu sudah dihapus.",
