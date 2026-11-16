@@ -15,4 +15,8 @@ urlpatterns = [
     path("api/login/", api.api_login, name="api_login"),
     path("api/register/", api.api_register, name="api_register"),
     path("api/logout/", api.api_logout, name="api_logout"),
+    path("api/profil/", api.api_profil, name="api_profil"),
+    path("api/profil/edit/", api.api_edit_profil, name="api_edit_profil"),
+    path("api/toggle-seller/", api.api_toggle_seller, name="api_toggle_seller"),
+    path("api/hapus/", api.api_hapus_akun, name="api_hapus_akun"),
 ]
