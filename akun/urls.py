@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from . import views, api
 app_name = "akun"
 
 urlpatterns = [
@@ -12,4 +12,7 @@ urlpatterns = [
     path("hapus/", views.hapus_akun, name="hapus_akun"),
     path("toggle-seller/", views.toggle_seller, name="toggle_seller"),
     path("json/", views.profil_json, name="profil_json"),
+    path("api/login/", api.api_login, name="api_login"),
+    path("api/register/", api.api_register, name="api_register"),
+    path("api/logout/", api.api_logout, name="api_logout"),
 ]

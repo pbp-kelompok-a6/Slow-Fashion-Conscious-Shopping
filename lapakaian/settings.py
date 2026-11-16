@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-p)+ljl)v8dzf*wa)o#bco2g#tl6l_1o*kb##+h#c+hngub4ca9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "naurah-claradinda-lapakaian.pws.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "10.0.2.2", "naurah-claradinda-lapakaian.pws.cs.ui.ac.id"]
 CSRF_TRUSTED_ORIGINS = ["https://naurah-claradinda-lapakaian.pws.cs.ui.ac.id"]
 
 # Application definition
@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'lapakaian.urls'
@@ -136,3 +137,5 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "akun:login"
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
